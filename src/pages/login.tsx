@@ -1,9 +1,10 @@
+import useAuth from "hooks/useAuth";
 import LoginLayout from "layouts/LoginLayout";
 import { NextPage } from "next";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 const Login: NextPage = () => {
-  /* const {login} = useAuth(); */
+  const { login } = useAuth();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -11,7 +12,7 @@ const Login: NextPage = () => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    /* await login(email, password); */
+    await login(email, password);
   };
 
   return (

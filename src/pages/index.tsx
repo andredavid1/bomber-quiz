@@ -1,8 +1,8 @@
 import axios from "axios";
-import useAuth from "hooks/useAuth";
-import useConfig from "hooks/useConfig";
 import type { NextPage, NextPageContext } from "next";
 import { useEffect } from "react";
+import useAuth from "hooks/useAuth";
+import useConfig from "hooks/useConfig";
 
 const Home: NextPage = () => {
   const { theme, toggleTheme } = useConfig();
