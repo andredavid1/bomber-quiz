@@ -2,7 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import dark from "styles/themes/dark";
 import light from "styles/themes/light";
-/* import { AuthProvider } from "./AuthContext"; */
+import { AuthProvider } from "./AuthContext";
 
 interface IConfigContextProps {
   loading: boolean;
@@ -46,7 +46,9 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
     <ConfigContext.Provider
       value={{ loading, theme, toggleLoading, toggleTheme }}
     >
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>{children}</AuthProvider>
+      </ThemeProvider>
     </ConfigContext.Provider>
   );
 };
