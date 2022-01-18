@@ -3,6 +3,7 @@ import type { NextPage, NextPageContext } from "next";
 import { useEffect } from "react";
 import useAuth from "hooks/useAuth";
 import useConfig from "hooks/useConfig";
+import PagesLayout from "layouts/PagesLayout";
 
 const Home: NextPage = () => {
   const { theme, toggleTheme } = useConfig();
@@ -14,14 +15,14 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <div>
+    <PagesLayout>
       <h1>Página Inicial</h1>
       <h2>Usuário logado: {userLogged?.name}</h2>
       <button onClick={toggleTheme}>
         {theme.title === "light" ? "Tema Dark" : "Tema Light"}
       </button>
       <button onClick={logout}>Sair</button>
-    </div>
+    </PagesLayout>
   );
 };
 
