@@ -8,11 +8,11 @@ import { Container } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 
-interface ILayoutCustomerProps {
+interface IPagesLayoutProps {
   children: ReactNode;
 }
 
-const LayoutCustomer: NextPage<ILayoutCustomerProps> = ({ children }) => {
+const PagesLayout: NextPage<IPagesLayoutProps> = ({ children }) => {
   const { loading } = useConfig();
 
   return (
@@ -34,4 +34,4 @@ const LayoutCustomer: NextPage<ILayoutCustomerProps> = ({ children }) => {
   );
 };
 
-export default LayoutCustomer;
+export default PagesLayout;
