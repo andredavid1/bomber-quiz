@@ -46,9 +46,9 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
     <ConfigContext.Provider
       value={{ loading, theme, toggleLoading, toggleTheme }}
     >
-      <ThemeProvider theme={theme}>
-        <AuthProvider>{children}</AuthProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </AuthProvider>
     </ConfigContext.Provider>
   );
 };

@@ -15,7 +15,7 @@ interface IAuthContextProps {
   userLogged: IUserLogged | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  verify: () => Promise<boolean>;
+  verify: () => Promise<void>;
 }
 
 const AuthContext = createContext({
@@ -53,9 +53,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 
     await axios
       .post("/api/auth/logout", null)
-      .then((response) => {
-        console.log(response.data);
-
+      .then((_response) => {
         Router.push("/login");
       })
       .catch((err) => {
@@ -70,7 +68,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     Router.push("/login");
   };
 
-  const verify = async (): Promise<boolean> => {
+  const verify = async (): Promise<void> => {
     toggleLoading(true);
 
     const token = getCookie("tokenBomberQuiz");
@@ -83,14 +81,11 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         return true;
       })
       .catch((err) => {
-        console.log(err.response);
         toast.error(err.response.data.error);
-        return false;
       })
       .finally(async () => {
         toggleLoading(false);
       });
-    return true;
   };
 
   return (
