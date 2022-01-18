@@ -1,6 +1,12 @@
 {
-  "name": "querolouvar",
+  "name": "bomber-quiz",
   "private": true,
+  "author": {
+    "name": "André David dos Santos",
+    "email": "andredavid1@yahoo.com.br",
+    "url": "https://github.com/andredavid1"
+  },
+  "version": "0.0.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
