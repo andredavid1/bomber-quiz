@@ -19,7 +19,6 @@ export default async function handler(
         removeCookies("tokenBomberQuiz", {
           req,
           res,
-          domain: process.env.DOMAIN,
           path: "/",
           maxAge: 60 * 60, //1 hour
           sameSite: "lax",
