@@ -16,8 +16,8 @@ const Home: NextPage = () => {
 
   return (
     <PagesLayout>
-      <h1>Página Inicial</h1>
-      <h2>Usuário logado: {userLogged?.name}</h2>
+      <h2>Página Inicial</h2>
+      <h3>Usuário logado: {userLogged?.name}</h3>
       <button onClick={toggleTheme}>
         {theme.title === "light" ? "Tema Dark" : "Tema Light"}
       </button>
