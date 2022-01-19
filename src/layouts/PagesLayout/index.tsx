@@ -9,7 +9,7 @@ import useConfig from "hooks/useConfig";
 
 import { Container } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
-import Content from "components/ContentPages";
+import Content from "components/Content";
 
 interface IPagesLayoutProps {
   children: ReactNode;

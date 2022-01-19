@@ -77,8 +77,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
       .post("/api/auth/verify", { token })
       .then((response) => {
         setUserLogged(response.data.payload);
-
-        return true;
       })
       .catch((err) => {
         toast.error(err.response.data.error);
