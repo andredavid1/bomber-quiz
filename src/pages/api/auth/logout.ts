@@ -20,8 +20,6 @@ export default async function handler(
           req,
           res,
           path: "/",
-          maxAge: 60 * 60, //1 hour
-          sameSite: "lax",
         });
 
         return res.status(200).json({ success: true });

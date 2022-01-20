@@ -8,6 +8,11 @@ declare module "styled-components" {
       primary: string;
       secondary: string;
 
+      infoBg: string;
+      warningBg: string;
+      successBg: string;
+      dangerBg: string;
+
       background: string;
       text: string;
     };

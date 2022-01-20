@@ -3,10 +3,15 @@ export default {
   title: "dark",
 
   colors: {
-    primary: "#333333",
-    secondary: "#c62e65",
+    primary: "#240000",
+    secondary: "#ffffff",
 
-    background: "#222222",
+    infoBg: "#00333d",
+    warningBg: "#525200",
+    successBg: "#193819",
+    dangerBg: "#8F0000",
+
+    background: "#520000",
     text: "#ffffff",
   },
 };

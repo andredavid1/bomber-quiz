@@ -1,6 +1,9 @@
+import Loading from "components/Loading";
+import useConfig from "hooks/useConfig";
 import { NextPage } from "next";
 import Head from "next/head";
 import { ReactNode } from "react";
+import { ToastContainer } from "react-toastify";
 import { Container, FormContainer } from "./styles";
 
 interface ILoginLayoutProps {
@@ -8,6 +11,8 @@ interface ILoginLayoutProps {
 }
 
 const LoginLayout: NextPage<ILoginLayoutProps> = ({ children }) => {
+  const { loading } = useConfig();
+
   return (
     <Container>
       <Head>
@@ -21,6 +26,8 @@ const LoginLayout: NextPage<ILoginLayoutProps> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <FormContainer>{children}</FormContainer>
+      <ToastContainer position="top-right" />
+      <Loading show={loading} />
     </Container>
   );
 };

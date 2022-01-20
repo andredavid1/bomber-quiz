@@ -18,6 +18,7 @@ export const Container = styled.header`
 export const Brand = styled.h1`
   grid-area: Brand;
   padding: 5px 10px;
+  color: #ffffff;
 `;
 
 interface IMenuProps {
@@ -47,6 +48,7 @@ export const Menu = styled.ul.attrs((props: IMenuProps) => {
 
     a {
       display: block;
+      color: #ffffff;
       padding: 8px 15px;
       text-align: center;
       width: 100%;
@@ -58,7 +60,7 @@ export const Menu = styled.ul.attrs((props: IMenuProps) => {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: ${(props) => props.theme.colors.text};
+      color: #ffffff;
       font-size: large;
       padding: 8px;
       width: 100%;

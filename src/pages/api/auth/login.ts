@@ -85,7 +85,7 @@ export default async function handler(
           req,
           res,
           path: "/",
-          maxAge: 60 * 60, //1 hour
+          maxAge: 86400, //1 day
           sameSite: "lax",
         });
 
