@@ -69,11 +69,9 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   };
 
   const verify = async (): Promise<void> => {
-    console.log("dentro context verify");
     toggleLoading(true);
 
     const token = getCookie("tokenBomberQuiz");
-    console.log("achou token", token);
 
     await axios
       .post("/api/auth/verify", { token })

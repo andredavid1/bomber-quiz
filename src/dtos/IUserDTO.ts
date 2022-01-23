@@ -2,7 +2,6 @@ export interface ICreateUserDTO {
   name: string;
   rg: number;
   email: string;
-  avatarUrl: string;
   password: string;
   level: "admin" | "partner" | "customer";
   registered: boolean;

@@ -117,17 +117,27 @@ const AddUser = ({ show }: IAddUserProps) => {
       name: name.trim(),
       rg: parseInt(rg.trim()),
       email: email.trim(),
-      avatarUrl,
       password: password.trim(),
       level: "customer",
       registered: false,
       expiresRegister: new Date(Date.now()),
     };
 
-    await addUser(data);
+    const result = await addUser(data);
 
-    initialState();
-    toggleOperation("list");
+    if (result === "sucesso") {
+      initialState();
+      toggleOperation("list");
+    } else {
+      switch (result) {
+        case "Já existe um usuário cadastrado com esse RG.":
+          document.getElementById("rg")?.focus();
+          break;
+        case "Já existe um usuário cadastrado com esse e-mail.":
+          document.getElementById("email")?.focus();
+          break;
+      }
+    }
   };
 
   return (
@@ -171,20 +181,6 @@ const AddUser = ({ show }: IAddUserProps) => {
               setEmail(event.target.value)
             }
           />
-        </RowForm>
-        {avatarUrl && (
-          <RowForm>
-            <img
-              src={avatarUrl}
-              alt="Avatar Preview"
-              width={100}
-              height={100}
-            />
-          </RowForm>
-        )}
-        <RowForm>
-          <label htmlFor="avatar">Avatar (foto):</label>
-          <input type="file" id="avatar" onChange={handleChangeFile} />
         </RowForm>
         <RowForm>
           <label htmlFor="password">Senha:</label>

@@ -14,7 +14,7 @@ export const Container = styled.div.attrs((props: IContainerProps) => {
   justify-content: center;
   min-height: 100vh;
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: #f5f5f5;
+  color: #222;
+  opacity: 0.7;
 `;

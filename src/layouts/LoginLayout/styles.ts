@@ -16,7 +16,6 @@ export const FormContainer = styled.div`
   justify-content: center;
   width: 100%;
   min-height: 100vh;
-  position: relative;
 
   h2 {
     width: 100%;

@@ -36,8 +36,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         await connectDB();
 
-        console.log(req.body);
-
         const requiredFields = {
           name: "nome",
           rg: "rg",

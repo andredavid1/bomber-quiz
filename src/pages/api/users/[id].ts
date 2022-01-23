@@ -10,8 +10,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "GET":
-      console.log("metodo user get");
-
       try {
         await connectDB();
 
@@ -21,7 +19,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(200).json({ success: true, users });
       } catch (err) {
-        console.log(err);
         if (err instanceof AppError) {
           res
             .status(err.statusCode)
@@ -36,9 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
 
     case "PUT":
-      console.log("método post");
       try {
-        console.log("dentro try");
         await connectDB();
 
         const requiredFields = {
@@ -56,7 +51,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             throw new AppError(`Preencha o campo ${value}.`, 400);
           }
         }
-        console.log("checou campos");
 
         const { rg, email, password } = req.body;
 
@@ -92,15 +86,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           password: hashedPassword,
         };
 
-        console.log("dados para gravar", data);
-
         const user = new User(data);
 
         await user.save();
 
         res.status(201).json({ success: true, user });
       } catch (err) {
-        console.log(err);
         if (err instanceof AppError) {
           res
             .status(err.statusCode)

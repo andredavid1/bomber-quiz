@@ -7,7 +7,7 @@ import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
 interface IUserContextProps {
   users: IUserDTO[];
   userSelected: IUserDTO | null;
-  addUser: (data: ICreateUserDTO) => Promise<void>;
+  addUser: (data: ICreateUserDTO) => Promise<string>;
   listUsers: () => Promise<void>;
   showDetailsUser: () => Promise<void>;
   updateUser: (data: IUserDTO) => Promise<void>;
@@ -29,23 +29,25 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const [users, setUsers] = useState<IUserDTO[]>([] as IUserDTO[]);
   const [userSelected, setUserSelected] = useState<IUserDTO | null>(null);
 
-  const addUser = async (data: ICreateUserDTO): Promise<void> => {
+  const addUser = async (data: ICreateUserDTO): Promise<string> => {
     toggleLoading(true);
-
-    console.log("context user data", data);
+    let response: string = "";
 
     await axios
       .post("/api/users", { data })
       .then((_response) => {
         listUsers();
         toast.success("Usuário cadastrado com sucesso.");
+        response = "sucesso";
       })
       .catch((err) => {
-        toast.error(err.response.data.error);
+        toast.error(err.response.data.errorMessage);
+        response = err.response.data.errorMessage;
       })
       .finally(async () => {
         toggleLoading(false);
       });
+    return response;
   };
 
   const listUsers = async (): Promise<void> => {
