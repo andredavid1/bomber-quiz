@@ -5,13 +5,13 @@ export const Container = styled.header`
   display: grid;
   justify-content: space-between;
   grid-template-areas:
-    "Brand ToggleShowMenu"
-    "Menu Menu";
+    "Brand Profile ToggleShowMenu"
+    "Menu Menu Menu";
   background: ${(props) => props.theme.colors.primary};
   width: 100%;
 
   @media screen and (min-width: 760px) {
-    grid-template-areas: "Brand Menu";
+    grid-template-areas: "Brand Menu Profile";
   }
 `;
 
@@ -72,6 +72,17 @@ export const Menu = styled.ul.attrs((props: IMenuProps) => {
   }
 `;
 
+export const UserProfilerContainer = styled.div`
+  grid-area: Profile;
+  display: flex;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+  }
+`;
+
 export const ToggleShowMenu = styled.button`
   grid-area: ToggleShowMenu;
   background: none;
@@ -79,7 +90,7 @@ export const ToggleShowMenu = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.colors.text};
+  color: ${(props) => props.theme.colors.secondary};
   font-size: x-large;
   padding: 5px 10px;
 

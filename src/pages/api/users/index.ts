@@ -1,21 +1,45 @@
 import { hash } from "bcrypt";
+import { isBefore } from "date-fns";
+import { NextApiRequest, NextApiResponse } from "next";
+
 import { ICreateUserDTO } from "dtos/IUserDTO";
 import AppError from "erros/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
-import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
+  const { field, order } = req.query;
 
   switch (method) {
     case "GET":
       try {
         await connectDB();
 
-        const users = await User.find({}).select(
-          "_id name rg email level registered expiresRegister createdAt updatedAt"
-        );
+        const checkRegister = await User.find().exec();
+
+        checkRegister.map((user) => {
+          if (
+            //futuramente implementar envio de e-mail falando
+            //que a assinatura do usuário expirou
+
+            user.registered &&
+            isBefore(user.expiresRegister, new Date(Date.now()))
+          ) {
+            User.findByIdAndUpdate(
+              user._id,
+              { registered: false },
+              { new: true }
+            ).exec();
+          }
+        });
+
+        const users = await User.find()
+          .select(
+            "_id name rg email level registered expiresRegister createdAt updatedAt"
+          )
+          .sort([[field, order]])
+          .exec();
 
         res.status(200).json({ success: true, users });
       } catch (err) {

@@ -1,27 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
-import { ChangeEvent, FormEvent, InputHTMLAttributes, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import validator from "validator";
 
 import { ICreateUserDTO } from "dtos/IUserDTO";
-import useConfig from "hooks/useConfig";
+import useUser from "hooks/useUser";
 
 import { Container, Form, RowForm } from "./styles";
-import useUser from "hooks/useUser";
 
 interface IAddUserProps {
   show: boolean;
 }
 
 const AddUser = ({ show }: IAddUserProps) => {
-  const { toggleOperation } = useConfig();
-  const { addUser } = useUser();
+  const { addUser, toggleOperation } = useUser();
 
   const [name, setName] = useState<string>("");
   const [rg, setRg] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
-  const [avatar, setAvatar] = useState<Blob | string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
@@ -97,11 +93,6 @@ const AddUser = ({ show }: IAddUserProps) => {
     initialState();
 
     toggleOperation("list");
-  };
-
-  const handleChangeFile = (event: any) => {
-    setAvatarUrl(URL.createObjectURL(event.target.files[0]));
-    setAvatar(event.target.files[0]);
   };
 
   const handleSubmit = async (event: FormEvent) => {

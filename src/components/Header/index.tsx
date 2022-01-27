@@ -1,10 +1,21 @@
+/* eslint-disable @next/next/no-img-element */
+import useAuth from "hooks/useAuth";
 import useConfig from "hooks/useConfig";
 import Link from "next/link";
 import { useState } from "react";
 import { FiMenu, FiMoon, FiSun } from "react-icons/fi";
-import { Brand, Container, Menu, ToggleShowMenu } from "./styles";
+import profileImg from "../../../public/profile.png";
+
+import {
+  Brand,
+  Container,
+  Menu,
+  ToggleShowMenu,
+  UserProfilerContainer,
+} from "./styles";
 
 const Header = () => {
+  const { userLogged, logout } = useAuth();
   const { theme, toggleTheme } = useConfig();
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
@@ -28,6 +39,16 @@ const Header = () => {
           </button>
         </li>
       </Menu>
+
+      <UserProfilerContainer>
+        <img src="/profile.png" alt="perfil do usuário" />
+        <nav>
+          <Link href="/" passHref>
+            <a>Perfil do Usuário</a>
+          </Link>
+          <button onClick={logout}>Sair</button>
+        </nav>
+      </UserProfilerContainer>
 
       <ToggleShowMenu type="button" onClick={() => setShowMenu(!showMenu)}>
         <FiMenu />

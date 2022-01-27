@@ -1,4 +1,4 @@
-import useConfig from "hooks/useConfig";
+import useUser from "hooks/useUser";
 import { ChangeEvent, useState } from "react";
 import { FiXCircle } from "react-icons/fi";
 import { Container, SearchContainer } from "./styles";
@@ -8,7 +8,7 @@ interface IUserActionsProps {
 }
 
 const UsersActions = ({ show }: IUserActionsProps) => {
-  const { toggleOperation } = useConfig();
+  const { toggleOperation } = useUser();
 
   const [itemSearch, setItemSearch] = useState<string>("");
 

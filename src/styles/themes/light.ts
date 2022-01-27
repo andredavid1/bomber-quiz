@@ -11,7 +11,7 @@ export default {
     successBg: "#008055",
     dangerBg: "#9B0000",
 
-    background: "#f5f5f5",
-    text: "#333333",
+    background: "#f2f2f2",
+    text: "#000000",
   },
 };

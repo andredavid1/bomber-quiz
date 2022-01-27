@@ -1,12 +1,11 @@
 import axios from "axios";
 import type { NextPage, NextPageContext } from "next";
 import { useEffect } from "react";
+
 import useAuth from "hooks/useAuth";
-import useConfig from "hooks/useConfig";
 import PagesLayout from "layouts/PagesLayout";
 
 const Home: NextPage = () => {
-  const { theme, toggleTheme } = useConfig();
   const { userLogged, logout, verify } = useAuth();
 
   useEffect(() => {
@@ -18,9 +17,6 @@ const Home: NextPage = () => {
     <PagesLayout>
       <h2>Página Inicial</h2>
       <h3>Usuário logado: {userLogged?.name}</h3>
-      <button onClick={toggleTheme}>
-        {theme.title === "light" ? "Tema Dark" : "Tema Light"}
-      </button>
       <button onClick={logout}>Sair</button>
     </PagesLayout>
   );

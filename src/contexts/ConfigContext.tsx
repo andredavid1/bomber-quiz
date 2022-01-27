@@ -1,10 +1,7 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import useAuth from "hooks/useAuth";
-import useUser from "hooks/useUser";
-import router from "next/router";
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import dark from "styles/themes/dark";
 import light from "styles/themes/light";
@@ -17,7 +14,7 @@ interface IConfigContextProps {
   operation: string;
   toggleLoading: (show: boolean) => void;
   toggleTheme: () => void;
-  toggleOperation: (operation: string) => void;
+  toggleOperation: (operationSelected: string) => void;
 }
 
 const ConfigContext = createContext({
@@ -30,6 +27,8 @@ interface IConfigProviderProps {
 }
 
 export const ConfigProvider = ({ children }: IConfigProviderProps) => {
+  const { verify } = useAuth();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [theme, setTheme] = useState<DefaultTheme>(light);
   const [operation, setOperation] = useState<string>("list");
@@ -53,24 +52,9 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
     }
   };
 
-  const verify = async (): Promise<void> => {
-    toggleLoading(true);
-
-    const token = getCookie("tokenBomberQuiz");
-
-    await axios
-      .post("/api/auth/verify", { token })
-      .catch((_err) => {
-        router.push("/login");
-      })
-      .finally(async () => {
-        toggleLoading(false);
-      });
-  };
-
-  const toggleOperation = async (operation: string) => {
+  const toggleOperation = async (operationSelected: string): Promise<void> => {
     await verify();
-    setOperation(operation);
+    setOperation(operationSelected);
   };
 
   return (

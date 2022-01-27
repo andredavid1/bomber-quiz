@@ -8,7 +8,7 @@ export default {
 
     infoBg: "#00333d",
     warningBg: "#525200",
-    successBg: "#193819",
+    successBg: "#008055",
     dangerBg: "#8F0000",
 
     background: "#520000",

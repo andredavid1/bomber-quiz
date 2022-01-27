@@ -1,23 +1,36 @@
 import axios from "axios";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import useConfig from "hooks/useConfig";
 import { toast } from "react-toastify";
 import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
+import { getCookie } from "cookies-next";
+import router from "next/router";
+
+interface IOrderProps {
+  field?: string;
+  order?: string;
+}
 
 interface IUserContextProps {
   users: IUserDTO[];
   userSelected: IUserDTO | null;
+  operation: string;
+  order: IOrderProps;
   addUser: (data: ICreateUserDTO) => Promise<string>;
-  listUsers: () => Promise<void>;
+  listUsers: (orderSelected: IOrderProps) => Promise<void>;
   showDetailsUser: () => Promise<void>;
   updateUser: (data: IUserDTO) => Promise<void>;
   deleteUser: () => Promise<void>;
-  handleSelectUser: (user: IUserDTO) => void;
+  handleSelectUser: (user: IUserDTO | null) => void;
+  toggleOperation: (operation: string) => Promise<void>;
+  toggleOrder: (field: string) => void;
 }
 
 const UserContext = createContext({
   users: [] as IUserDTO[],
   userSelected: null,
+  operation: "list",
+  order: { field: "createdAt", order: "desc" },
 } as IUserContextProps);
 
 interface IUserProviderProps {
@@ -28,6 +41,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const { toggleLoading } = useConfig();
   const [users, setUsers] = useState<IUserDTO[]>([] as IUserDTO[]);
   const [userSelected, setUserSelected] = useState<IUserDTO | null>(null);
+  const [operation, setOperation] = useState<string>("list");
+  const [order, setOrder] = useState<IOrderProps>({
+    field: "createdAt",
+    order: "desc",
+  });
 
   const addUser = async (data: ICreateUserDTO): Promise<string> => {
     toggleLoading(true);
@@ -36,7 +54,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     await axios
       .post("/api/users", { data })
       .then((_response) => {
-        listUsers();
+        listUsers(order);
         toast.success("Usuário cadastrado com sucesso.");
         response = "sucesso";
       })
@@ -50,11 +68,19 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     return response;
   };
 
-  const listUsers = async (): Promise<void> => {
+  const listUsers = async ({
+    field = "createdAt",
+    order = "desc",
+  }: IOrderProps): Promise<void> => {
     toggleLoading(true);
 
     await axios
-      .get("/api/users")
+      .get("/api/users", {
+        params: {
+          field,
+          order,
+        },
+      })
       .then((response) => {
         setUsers(response.data.users);
       })
@@ -99,7 +125,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     await axios
       .put(`/api/users/${data._id}`, user)
       .then((_response) => {
-        listUsers();
+        listUsers(order);
         toast.success("Usuário atualizado com sucesso.");
       })
       .catch((err) => {
@@ -126,8 +152,28 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       });
   };
 
-  const handleSelectUser = (user: IUserDTO): void => {
+  const handleSelectUser = (user: IUserDTO | null): void => {
     setUserSelected(user);
+  };
+
+  const toggleOperation = async (operation: string): Promise<void> => {
+    setOperation(operation);
+    listUsers(order);
+  };
+
+  const toggleOrder = (field: string): void => {
+    if (order.field !== field) {
+      setOrder({ field, order: "asc" });
+      listUsers({ field, order: "asc" });
+    } else {
+      if (order.order === "asc") {
+        setOrder({ field, order: "desc" });
+        listUsers({ field, order: "desc" });
+      } else {
+        setOrder({ field, order: "asc" });
+        listUsers({ field, order: "asc" });
+      }
+    }
   };
 
   return (
@@ -135,12 +181,16 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       value={{
         users,
         userSelected,
+        operation,
+        order,
         addUser,
         listUsers,
         showDetailsUser,
         updateUser,
         deleteUser,
         handleSelectUser,
+        toggleOperation,
+        toggleOrder,
       }}
     >
       {children}

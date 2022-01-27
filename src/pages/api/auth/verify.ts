@@ -47,6 +47,8 @@ export default async function handler(
           jwtSecret
         ) as JwtPayload;
 
+        console.log("payload", payload);
+
         if (!payload) {
           throw new AppError("Acesso não autorizado.", 401);
         }
