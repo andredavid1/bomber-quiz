@@ -24,7 +24,7 @@ export const Form = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
+  background: ${(props) => props.theme.colors.secondary};
   padding-bottom: 20px;
   border-radius: 8px;
   color: #333333;
@@ -47,9 +47,14 @@ export const RowForm = styled.div`
   }
 
   input,
-  .select {
+  select {
+    width: 67%;
     background-color: #ffffff;
     color: #000000;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    outline: none;
+    padding: 4px 8px;
 
     &:disabled {
       background-color: #dddddd;
@@ -57,30 +62,15 @@ export const RowForm = styled.div`
     }
   }
 
-  input {
-    width: 67%;
-    border-radius: 5px;
-    border: 1px solid #333333;
-    outline: none;
-    padding: 4px 8px;
-  }
-
-  .select {
-    width: 67%;
-    outline: none;
-    border: 1px solid #333333;
-    border-radius: 5px;
-    font-size: small;
-
-    > svg {
-      font-size: small;
-    }
+  select {
+    padding: 4px;
   }
 
   button {
     border: 1px solid #333333;
     border-radius: 8px;
     padding: 8px 24px;
+    margin-top: 15px;
 
     &.cancel {
       background: none;
@@ -95,7 +85,7 @@ export const RowForm = styled.div`
 
     &.action {
       background: ${(props) => props.theme.colors.infoBg};
-      color: ${(props) => props.theme.colors.secondary};
+      color: ${(props) => props.theme.colors.white};
       margin-left: 5px;
       transition: background-color 0.2s;
 
@@ -123,7 +113,7 @@ export const RowForm = styled.div`
 
     &.action {
       background: ${(props) => props.theme.colors.infoBg};
-      color: ${(props) => props.theme.colors.secondary};
+      color: ${(props) => props.theme.colors.white};
       margin-left: 5px;
       transition: background-color 0.2s;
 

@@ -52,7 +52,7 @@ export const Container = styled.div.attrs((props: IContainerProps) => {
 
   th {
     background-color: ${(props) => props.theme.colors.infoBg};
-    color: ${(props) => props.theme.colors.secondary};
+    color: ${(props) => props.theme.colors.white};
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -79,7 +79,7 @@ export const Container = styled.div.attrs((props: IContainerProps) => {
       border: none;
       background: none;
       outline: none;
-      color: ${(props) => props.theme.colors.secondary};
+      color: ${(props) => props.theme.colors.white};
       text-transform: uppercase;
       font-weight: bold;
       letter-spacing: 1px;

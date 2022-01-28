@@ -18,6 +18,7 @@ const Header = () => {
   const { userLogged, logout } = useAuth();
   const { theme, toggleTheme } = useConfig();
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [showProfile, setShowProfile] = useState<boolean>(false);
 
   return (
     <Container>
@@ -33,6 +34,16 @@ const Header = () => {
             <a>Usuários</a>
           </Link>
         </li>
+        <li className="profile">
+          <button type="button" onClick={() => setShowProfile(!showProfile)}>
+            Perfil
+          </button>
+          <UserProfilerContainer show={showProfile}>
+            <li>
+              <button onClick={logout}>Sair</button>
+            </li>
+          </UserProfilerContainer>
+        </li>
         <li>
           <button type="button" onClick={toggleTheme}>
             {theme.title === "light" ? <FiMoon /> : <FiSun />}
@@ -40,15 +51,7 @@ const Header = () => {
         </li>
       </Menu>
 
-      <UserProfilerContainer>
-        <img src="/profile.png" alt="perfil do usuário" />
-        <nav>
-          <Link href="/" passHref>
-            <a>Perfil do Usuário</a>
-          </Link>
-          <button onClick={logout}>Sair</button>
-        </nav>
-      </UserProfilerContainer>
+      <UserProfilerContainer show={showMenu}></UserProfilerContainer>
 
       <ToggleShowMenu type="button" onClick={() => setShowMenu(!showMenu)}>
         <FiMenu />

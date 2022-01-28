@@ -4,7 +4,8 @@ export default {
 
   colors: {
     primary: "#800000",
-    secondary: "#ffffff",
+    secondary: "#d5d5d5",
+    white: "#f5f5f5",
 
     infoBg: "#005580",
     warningBg: "#805500",

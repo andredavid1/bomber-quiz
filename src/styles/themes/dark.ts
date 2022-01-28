@@ -5,6 +5,7 @@ export default {
   colors: {
     primary: "#240000",
     secondary: "#ffffff",
+    white: "#f5f5f5",
 
     infoBg: "#00333d",
     warningBg: "#525200",

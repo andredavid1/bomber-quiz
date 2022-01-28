@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { ICreateUserDTO } from "dtos/IUserDTO";
+import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
 import AppError from "erros/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
@@ -7,43 +7,24 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
+  const { id } = req.query;
 
   switch (method) {
-    case "GET":
-      try {
-        await connectDB();
-
-        const users = await User.find({}).select(
-          "_id name rg email level registered expiresRegister createdAt updatedAt"
-        );
-
-        res.status(200).json({ success: true, users });
-      } catch (err) {
-        if (err instanceof AppError) {
-          res
-            .status(err.statusCode)
-            .json({ success: false, errorMessage: err.message });
-        } else {
-          res.status(500).json({
-            success: false,
-            errorMessage: "Erro na conexão com o servidor.",
-          });
-        }
-      }
-      break;
-
     case "PUT":
       try {
         await connectDB();
+
+        const userToUpdate: IUserDTO = await User.findById(id).exec();
+
+        if (!userToUpdate) {
+          throw new AppError("Usuário não encontrado.", 400);
+        }
 
         const requiredFields = {
           name: "nome",
           rg: "rg",
           email: "e-mail",
-          password: "senha",
           level: "nível de acesso",
-          registered: "registrado",
-          expiresRegister: "vencimento do registro",
         };
 
         for (const [key, value] of Object.entries(requiredFields)) {
@@ -52,46 +33,44 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         }
 
-        const { rg, email, password } = req.body;
+        const { name, rg, email, level } = req.body;
+        console.log("level", level);
 
-        if (password.length < 8) {
-          throw new AppError(
-            "O campo senha precisa ter pelo menos 8 caracteres.",
-            400
-          );
-        }
-
-        const rgAlreadyExists = await User.findOne({
+        const rgAlreadyExists: IUserDTO = await User.findOne({
           rg,
         }).exec();
 
-        if (rgAlreadyExists) {
+        if (rgAlreadyExists && rgAlreadyExists._id.toString() !== id) {
           throw new AppError("Já existe um usuário cadastrado com esse RG.");
         }
 
-        const emailAlreadyExists = await User.findOne({
+        const emailAlreadyExists: IUserDTO = await User.findOne({
           email,
         }).exec();
 
-        if (emailAlreadyExists) {
+        if (emailAlreadyExists && emailAlreadyExists._id.toString() !== id) {
           throw new AppError(
             "Já existe um usuário cadastrado com esse e-mail."
           );
         }
 
-        const hashedPassword = await hash(password, 8);
+        const user = await User.findByIdAndUpdate(
+          id,
+          {
+            name,
+            rg,
+            email,
+            password: userToUpdate.password,
+            level,
+          },
+          { new: true }
+        ).exec();
 
-        const data: ICreateUserDTO = {
-          ...req.body,
-          password: hashedPassword,
-        };
-
-        const user = new User(data);
-
-        await user.save();
+        console.log("updated", user);
 
         res.status(201).json({ success: true, user });
       } catch (err) {
+        console.log(err);
         if (err instanceof AppError) {
           res
             .status(err.statusCode)
@@ -107,7 +86,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
 
     case "DELETE":
-      res.status(200).json({ success: true });
+      try {
+        await connectDB();
+
+        const user = await User.findByIdAndDelete(id);
+
+        if (!user) {
+          throw new AppError("Usuário não encontrado.", 404);
+        }
+
+        res.status(200).json({ success: true });
+      } catch (err: any) {
+        if (err instanceof AppError) {
+          res
+            .status(err.statusCode)
+            .json({ success: false, errorMessage: err.message });
+        } else {
+          res.status(500).json({
+            success: false,
+            errorMessage: "Erro na conexão com o servidor.",
+          });
+        }
+      }
       break;
 
     default:

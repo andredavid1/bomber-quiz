@@ -39,42 +39,36 @@ export const RowForm = styled.div`
   margin-bottom: 10px;
   width: 90%;
 
-  label {
-    width: 33%;
-    text-align: right;
-    font-size: small;
-    padding-right: 5px;
-  }
-
-  input {
-    width: 67%;
-    border-radius: 5px;
-    border: 1px solid #333333;
-    outline: none;
-    padding: 4px 8px;
+  span {
+    font-size: medium;
+    text-align: justify;
   }
 
   button {
     border: 1px solid #333333;
     border-radius: 8px;
     padding: 8px 24px;
+    margin-top: 15px;
 
     &.cancel {
       background: none;
       border: none;
       color: #000000;
-      margin-right: 5px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: ${shade(0.2, "#f5f5f5")};
+      }
     }
 
-    &.success {
-      background: ${(props) => props.theme.colors.successBg};
+    &.danger {
+      background: ${(props) => props.theme.colors.dangerBg};
       color: ${(props) => props.theme.colors.white};
       margin-left: 5px;
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: ${(props) =>
-          shade(0.2, props.theme.colors.successBg)};
+        background-color: ${(props) => shade(0.2, props.theme.colors.dangerBg)};
       }
     }
   }

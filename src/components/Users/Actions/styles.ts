@@ -13,7 +13,7 @@ export const Container = styled.div.attrs((props: IContainerProps) => {
 
   > button {
     background-color: ${(props) => props.theme.colors.infoBg};
-    color: ${(props) => props.theme.colors.secondary};
+    color: ${(props) => props.theme.colors.white};
     border-radius: 6px;
     border: none;
     padding: 8px 16px;

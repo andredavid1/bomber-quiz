@@ -11,6 +11,13 @@ interface IOrderProps {
   order?: string;
 }
 
+interface IUpdateData {
+  name: string;
+  rg: number;
+  email: string;
+  level: "admin" | "partner" | "customer";
+}
+
 interface IUserContextProps {
   users: IUserDTO[];
   userSelected: IUserDTO | null;
@@ -19,7 +26,7 @@ interface IUserContextProps {
   addUser: (data: ICreateUserDTO) => Promise<string>;
   listUsers: (orderSelected: IOrderProps) => Promise<void>;
   showDetailsUser: () => Promise<void>;
-  updateUser: (data: IUserDTO) => Promise<void>;
+  updateUser: (id: string, data: IUpdateData) => Promise<void>;
   deleteUser: () => Promise<void>;
   handleSelectUser: (user: IUserDTO | null) => void;
   toggleOperation: (operation: string) => Promise<void>;
@@ -85,7 +92,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         setUsers(response.data.users);
       })
       .catch((err) => {
-        toast.error(err.response.data.error);
+        toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
         toggleLoading(false);
@@ -103,14 +110,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         console.log(response.data);
       })
       .catch((err) => {
-        toast.error(err.response.data.error);
+        toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
         toggleLoading(false);
       });
   };
 
-  const updateUser = async (data: IUserDTO): Promise<void> => {
+  const updateUser = async (id: string, data: IUpdateData): Promise<void> => {
     toggleLoading(true);
 
     const user = {
@@ -118,18 +125,16 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       rg: data.rg,
       email: data.email,
       level: data.level,
-      registered: data.registered,
-      expiresRegister: data.expiresRegister,
     };
 
     await axios
-      .put(`/api/users/${data._id}`, user)
+      .put(`/api/users/${id}`, user)
       .then((_response) => {
-        listUsers(order);
+        toggleOperation("list");
         toast.success("Usuário atualizado com sucesso.");
       })
       .catch((err) => {
-        toast.error(err.response.data.error);
+        toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
         toggleLoading(false);
@@ -142,10 +147,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     await axios
       .delete(`/api/users/${userSelected?._id}`)
       .then((_response) => {
+        setUserSelected(null);
+        listUsers(order);
+        toggleOperation("list");
         toast.success("Usuário excluído com sucesso.");
       })
       .catch((err) => {
-        toast.error(err.response.data.error);
+        toggleOperation("list");
+        toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
         toggleLoading(false);

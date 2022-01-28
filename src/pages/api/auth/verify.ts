@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { decode, JwtPayload, verify } from "jsonwebtoken";
 import AppError from "erros/AppError";
+import { toDate } from "date-fns";
 
 interface IUserLogged {
   id: string;
@@ -42,15 +43,20 @@ export default async function handler(
           );
         }
 
-        const payload: JwtPayload = verify(
-          tokenBomberQuiz,
-          jwtSecret
-        ) as JwtPayload;
+        let payload: JwtPayload = {};
 
-        console.log("payload", payload);
+        try {
+          payload = verify(tokenBomberQuiz, jwtSecret) as JwtPayload;
 
-        if (!payload) {
-          throw new AppError("Acesso não autorizado.", 401);
+          if (payload.exp) {
+            console.log(toDate(payload.exp));
+          }
+          console.log("tem payload", payload);
+        } catch (err) {
+          console.log("token expirou");
+          return res
+            .status(401)
+            .json({ success: false, error: "Token de acesso expirado." });
         }
 
         const userLogged = {
@@ -61,6 +67,7 @@ export default async function handler(
 
         return res.status(200).json({ success: true, payload: userLogged });
       } catch (err: any) {
+        console.log(`${err}`);
         if (err instanceof AppError) {
           return res
             .status(err.statusCode)

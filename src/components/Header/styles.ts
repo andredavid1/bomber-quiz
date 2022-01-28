@@ -3,15 +3,17 @@ import styled from "styled-components";
 
 export const Container = styled.header`
   display: grid;
-  justify-content: space-between;
+  align-items: center;
   grid-template-areas:
-    "Brand Profile ToggleShowMenu"
-    "Menu Menu Menu";
+    "Brand ToggleShowMenu"
+    "Menu Menu"
+    "Profile Profile";
   background: ${(props) => props.theme.colors.primary};
+  position: relative;
   width: 100%;
 
   @media screen and (min-width: 760px) {
-    grid-template-areas: "Brand Menu Profile";
+    grid-template-areas: "Brand Menu";
   }
 `;
 
@@ -28,17 +30,16 @@ interface IMenuProps {
 export const Menu = styled.ul.attrs((props: IMenuProps) => {
   show: props.show;
 })`
+  display: ${(props) => (props.show ? "flex" : "none")};
+  position: relative;
   grid-area: Menu;
   list-style: none;
-  display: ${(props) => (props.show ? "flex" : "none")};
   align-items: center;
   justify-content: center;
   margin-bottom: 3px;
 
   li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
     min-width: 50px;
     transition: background-color 0.4s;
 
@@ -72,14 +73,18 @@ export const Menu = styled.ul.attrs((props: IMenuProps) => {
   }
 `;
 
-export const UserProfilerContainer = styled.div`
+export const UserProfilerContainer = styled.div.attrs((props: IMenuProps) => {
+  show: props.show;
+})`
+  display: ${(props) => (props.show ? "flex" : "none")};
   grid-area: Profile;
-  display: flex;
-
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+  list-style: none;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  background-color: lightgray;
+  li {
+    width: 100%;
   }
 `;
 
@@ -87,10 +92,10 @@ export const ToggleShowMenu = styled.button`
   grid-area: ToggleShowMenu;
   background: none;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => props.theme.colors.secondary};
+  position: absolute;
+  bottom: 5;
+  right: 0;
+  color: ${(props) => props.theme.colors.white};
   font-size: x-large;
   padding: 5px 10px;
 

@@ -1,13 +1,14 @@
 import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 
-import AddUser from "components/Users/Add";
-import ListUser from "components/Users/List";
 import UsersActions from "components/Users/Actions";
+import AddUser from "components/Users/Add";
+import DetailsUser from "components/Users/Details";
+import DeleteUser from "components/Users/Delete";
+import EditUser from "components/Users/Edit";
+import ListUser from "components/Users/List";
 import useUser from "hooks/useUser";
 import PagesLayout from "layouts/PagesLayout";
-import DetailsUser from "components/Users/Details";
-import EditUser from "components/Users/Edit";
 
 const Users: NextPage = () => {
   const { operation } = useUser();
@@ -19,6 +20,7 @@ const Users: NextPage = () => {
       <ListUser show={operation === "list"} />
       <DetailsUser show={operation === "details"} />
       <EditUser show={operation === "edit"} />
+      <DeleteUser show={operation === "delete"} />
     </PagesLayout>
   );
 };

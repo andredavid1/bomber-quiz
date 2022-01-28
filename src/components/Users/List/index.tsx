@@ -65,9 +65,15 @@ const ListUser = ({ show }: IListUserProps) => {
     toggleOperation("details");
   };
 
-  const handleEdit = (user: IUserDTO) => {};
+  const handleEdit = (user: IUserDTO) => {
+    handleSelectUser(user);
+    toggleOperation("edit");
+  };
 
-  const handleDelete = (user: IUserDTO) => {};
+  const handleDelete = (user: IUserDTO) => {
+    handleSelectUser(user);
+    toggleOperation("delete");
+  };
 
   return (
     <Container show={show}>
@@ -126,6 +132,24 @@ const ListUser = ({ show }: IListUserProps) => {
                 ) : null}
               </button>
             </th>
+            <th className="optional">
+              <button
+                style={{
+                  textDecoration:
+                    order.field === "level" ? "underline" : "none",
+                }}
+                onClick={() => handleOrder("level")}
+              >
+                Nível de acesso{" "}
+                {order.field === "level" ? (
+                  order.order === "asc" ? (
+                    <FiChevronUp />
+                  ) : (
+                    <FiChevronDown />
+                  )
+                ) : null}
+              </button>
+            </th>
             <th className="actions">Ações</th>
           </tr>
         </thead>
@@ -136,6 +160,13 @@ const ListUser = ({ show }: IListUserProps) => {
                 <td>{user.rg}</td>
                 <td className="bigger">{user.name}</td>
                 <td className="optional">{user.email}</td>
+                <td className="optional">
+                  {user.level === "admin"
+                    ? "administador"
+                    : user.level === "partner"
+                    ? "parceiro"
+                    : "cliente"}
+                </td>
                 <td className="actions">
                   <button onClick={() => handleDetails(user)}>
                     <FiList />
@@ -153,7 +184,7 @@ const ListUser = ({ show }: IListUserProps) => {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={4}>
+            <td colSpan={5}>
               <div>
                 <button
                   title="primeira página"

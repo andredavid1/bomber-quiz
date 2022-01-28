@@ -4,14 +4,10 @@ import { useEffect } from "react";
 
 import useAuth from "hooks/useAuth";
 import PagesLayout from "layouts/PagesLayout";
+import { toast } from "react-toastify";
 
 const Home: NextPage = () => {
-  const { userLogged, logout, verify } = useAuth();
-
-  useEffect(() => {
-    verify();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { userLogged, logout } = useAuth();
 
   return (
     <PagesLayout>
@@ -38,14 +34,14 @@ export async function getServerSideProps(ctx: NextPageContext) {
     const cookie = ctx.req.headers.cookie;
 
     if (cookie) {
-      const response = await axios({
-        method: "POST",
-        data: { token: cookie },
-        url: `${apiUrl}/auth/verify`,
-        headers: ctx.req ? { cookie } : undefined,
-      });
-
-      if (!response.data.success) {
+      try {
+        await axios({
+          method: "POST",
+          data: { token: cookie },
+          url: `${apiUrl}/auth/verify`,
+          headers: ctx.req ? { cookie } : undefined,
+        });
+      } catch (err: any) {
         return {
           redirect: {
             destination: "/login",

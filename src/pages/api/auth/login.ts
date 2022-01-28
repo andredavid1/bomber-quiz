@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { compare } from "bcrypt";
 import { setCookies } from "cookies-next";
-import { sign } from "jsonwebtoken";
+import { decode, JwtPayload, sign } from "jsonwebtoken";
 import { IUserDTO } from "dtos/IUserDTO";
 import AppError from "erros/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
+import { addDays } from "date-fns";
 
 interface IResponse {
   success: boolean;
@@ -78,14 +79,14 @@ export default async function handler(
             level: user.level,
           },
           jwtSecret,
-          { expiresIn: "1h" }
+          { expiresIn: "1d" }
         );
 
         setCookies("tokenBomberQuiz", jwt, {
           req,
           res,
           path: "/",
-          maxAge: 86400, //1 day
+          expires: addDays(new Date(Date.now()), 1),
           sameSite: "lax",
         });
 

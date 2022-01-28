@@ -1,54 +1,6 @@
-import Select, { StylesConfig, CSSObjectWithLabel } from "react-select";
-
 import useUser from "hooks/useUser";
-import { formatDate } from "utils/formatDate";
 import { Container, Form, RowForm } from "./styles";
 import { useEffect, useState } from "react";
-
-type IMyOptionsSelectType = {
-  label: string;
-  value: string;
-};
-
-type IsMulti = false;
-
-const customStyles: StylesConfig<IMyOptionsSelectType, IsMulti> = {
-  control: (provided, state) => {
-    return {
-      ...provided,
-      backgroundColor: state.isDisabled ? "#dddddd" : "#ffffff",
-      color: state.isDisabled ? "#333333" : "000000",
-      fontSize: "small",
-    };
-  },
-  option: (provided, state) => {
-    return {
-      ...provided,
-      backgroundColor: state.isDisabled ? "#dddddd" : "#ffffff",
-      color: state.isDisabled ? "#333333" : "000000",
-      fontSize: "small",
-    };
-  },
-  singleValue: (provided, state) => {
-    return {
-      ...provided,
-      backgroundColor: state.isDisabled ? "#dddddd" : "#ffffff",
-      color: state.isDisabled ? "#333333" : "000000",
-      fontSize: "small",
-    };
-  },
-};
-
-const optionsLevel: IMyOptionsSelectType[] = [
-  { value: "admin", label: "Administrador" },
-  { value: "partner", label: "Parceiro" },
-  { value: "customer", label: "Cliente" },
-];
-
-const optionsRegistered: IMyOptionsSelectType[] = [
-  { value: "sim", label: "sim" },
-  { value: "não", label: "não" },
-];
 
 interface IDetailsUserProps {
   show: boolean;
@@ -61,8 +13,10 @@ const DetailsUser = ({ show }: IDetailsUserProps) => {
   const [name, setName] = useState<string>("");
   const [rg, setRg] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [level, setLevel] = useState({ value: "customer", label: "cliente" });
-  const [registered, setRegistered] = useState({ value: "não", label: "não" });
+  const [level, setLevel] = useState<"admin" | "partner" | "customer">(
+    "customer"
+  );
+  const [registered, setRegistered] = useState<"Sim" | "Não">("Não");
   const [expiresRegister, setExpiresRegister] = useState<Date>(new Date());
 
   useEffect(() => {
@@ -71,19 +25,8 @@ const DetailsUser = ({ show }: IDetailsUserProps) => {
       setName(userSelected.name);
       setRg(userSelected.rg.toString());
       setEmail(userSelected.email);
-      setLevel({
-        value: userSelected.level,
-        label:
-          userSelected.level === "customer"
-            ? "cliente"
-            : userSelected.level === "partner"
-            ? "parceiro"
-            : "administrador",
-      });
-      setRegistered({
-        value: userSelected.registered ? "sim" : "não",
-        label: userSelected.registered ? "sim" : "não",
-      });
+      setLevel(userSelected.level);
+      setRegistered(userSelected.registered ? "Sim" : "Não");
       setExpiresRegister(userSelected.expiresRegister);
     }
   }, [userSelected]);
@@ -125,28 +68,20 @@ const DetailsUser = ({ show }: IDetailsUserProps) => {
         </RowForm>
         <RowForm>
           <label htmlFor="level">Nível de Acesso:</label>
-          <Select
-            id="level"
-            className="select"
-            styles={customStyles}
-            isDisabled
-            defaultValue={level}
-            options={optionsLevel}
-          />
+          <select id="level" value={level} disabled>
+            <option value="admin">Administrador</option>
+            <option value="partner">Parceiro</option>
+            <option value="customer">Cliente</option>
+          </select>
         </RowForm>
         <RowForm>
           <label htmlFor="registered">Registrado:</label>
-          <Select
-            id="registered"
-            className="select"
-            styles={customStyles}
-            isDisabled
-            isClearable={false}
-            defaultValue={registered}
-            options={optionsRegistered}
-          />
+          <select id="registered" value={registered} disabled>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
         </RowForm>
-        {registered && (
+        {registered === "Sim" && (
           <RowForm>
             <label htmlFor="expiresRegister">Vencimento do Registro:</label>
             <input
