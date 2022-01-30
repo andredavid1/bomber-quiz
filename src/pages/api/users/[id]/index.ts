@@ -10,6 +10,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
   switch (method) {
+    case "GET":
+      try {
+        await connectDB();
+
+        const user: IUserDTO = await User.findById(id).exec();
+
+        if (!user) {
+          throw new AppError("Usuário não encontrado.", 400);
+        }
+
+        res.status(201).json({ success: true, user });
+      } catch (err) {
+        if (err instanceof AppError) {
+          res
+            .status(err.statusCode)
+            .json({ success: false, errorMessage: err.message });
+        } else {
+          res.status(500).json({
+            success: false,
+            errorMessage: "Erro na conexão com o servidor.",
+          });
+        }
+      }
+
+      break;
+
     case "PUT":
       try {
         await connectDB();
@@ -34,7 +60,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const { name, rg, email, level } = req.body;
-        console.log("level", level);
 
         const rgAlreadyExists: IUserDTO = await User.findOne({
           rg,
@@ -66,11 +91,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           { new: true }
         ).exec();
 
-        console.log("updated", user);
-
         res.status(201).json({ success: true, user });
       } catch (err) {
-        console.log(err);
         if (err instanceof AppError) {
           res
             .status(err.statusCode)

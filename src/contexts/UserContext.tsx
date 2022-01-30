@@ -1,10 +1,11 @@
 import axios from "axios";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import router from "next/router";
+import { createContext, ReactNode, useState } from "react";
+
+import { removeCookies } from "cookies-next";
+import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
 import useConfig from "hooks/useConfig";
 import { toast } from "react-toastify";
-import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
-import { getCookie } from "cookies-next";
-import router from "next/router";
 
 interface IOrderProps {
   field?: string;
@@ -25,8 +26,19 @@ interface IUserContextProps {
   order: IOrderProps;
   addUser: (data: ICreateUserDTO) => Promise<string>;
   listUsers: (orderSelected: IOrderProps) => Promise<void>;
-  showDetailsUser: () => Promise<void>;
   updateUser: (id: string, data: IUpdateData) => Promise<void>;
+  changePassword: (
+    id: string,
+    activePassword: string,
+    newPassword: string
+  ) => Promise<void>;
+  subscribeUser: (
+    id: string,
+    plan: string,
+    condition: string,
+    discount: number,
+    amount: number
+  ) => Promise<void>;
   deleteUser: () => Promise<void>;
   handleSelectUser: (user: IUserDTO | null) => void;
   toggleOperation: (operation: string) => Promise<void>;
@@ -101,22 +113,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     toggleLoading(false);
   };
 
-  const showDetailsUser = async (): Promise<void> => {
-    toggleLoading(true);
-
-    await axios
-      .get(`/api/users/${userSelected?._id}`)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.errorMessage);
-      })
-      .finally(async () => {
-        toggleLoading(false);
-      });
-  };
-
   const updateUser = async (id: string, data: IUpdateData): Promise<void> => {
     toggleLoading(true);
 
@@ -134,6 +130,66 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         toast.success("Usuário atualizado com sucesso.");
       })
       .catch((err) => {
+        toast.error(err.response.data.errorMessage);
+      })
+      .finally(async () => {
+        toggleLoading(false);
+      });
+  };
+
+  const changePassword = async (
+    id: string,
+    activePassword: string,
+    newPassword: string
+  ): Promise<void> => {
+    toggleLoading(true);
+
+    await axios
+      .patch(`/api/users/${id}/change-password`, {
+        activePassword,
+        newPassword,
+      })
+      .then((_response) => {
+        toast.success("Senha alterada com sucesso.");
+        toggleOperation("list");
+        removeCookies("tokenBomberQuiz");
+        router.push("/login");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.errorMessage);
+      })
+      .finally(async () => {
+        toggleLoading(false);
+      });
+  };
+
+  const subscribeUser = async (
+    id: string,
+    plan: string,
+    condition: string,
+    discount: number,
+    amount: number
+  ) => {
+    toggleLoading(true);
+
+    await axios
+      .patch(`/api/users/${id}/subscribe`, {
+        plan,
+        condition,
+        discount,
+        amount,
+      })
+      .then((_response) => {
+        setUserSelected(null);
+        listUsers(order);
+        toggleOperation("list");
+        toast.success(
+          "Obrigado por acreditar em nosso trabalho. Assinatura concluída com sucesso."
+        );
+        router.push("/");
+      })
+      .catch((err) => {
+        toggleOperation("list");
         toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
@@ -194,8 +250,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         order,
         addUser,
         listUsers,
-        showDetailsUser,
         updateUser,
+        changePassword,
+        subscribeUser,
         deleteUser,
         handleSelectUser,
         toggleOperation,

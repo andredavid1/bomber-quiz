@@ -2,9 +2,8 @@
 import useAuth from "hooks/useAuth";
 import useConfig from "hooks/useConfig";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMenu, FiMoon, FiSun } from "react-icons/fi";
-import profileImg from "../../../public/profile.png";
 
 import {
   Brand,
@@ -15,10 +14,15 @@ import {
 } from "./styles";
 
 const Header = () => {
-  const { userLogged, logout } = useAuth();
+  const { userLogged, verify, logout } = useAuth();
   const { theme, toggleTheme } = useConfig();
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState<boolean>(false);
+
+  useEffect(() => {
+    verify();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container>
@@ -34,11 +38,24 @@ const Header = () => {
             <a>Usuários</a>
           </Link>
         </li>
+
+        <li>
+          <Link href="/materias" passHref>
+            <a>Matérias</a>
+          </Link>
+        </li>
+
         <li className="profile">
           <button type="button" onClick={() => setShowProfile(!showProfile)}>
             Perfil
           </button>
           <UserProfilerContainer show={showProfile}>
+            <li>{userLogged?.name}</li>
+            <li>
+              <Link href={`/usuarios/${userLogged?.id}/alterar-senha`} passHref>
+                <a>Alterar Senha</a>
+              </Link>
+            </li>
             <li>
               <button onClick={logout}>Sair</button>
             </li>

@@ -38,7 +38,6 @@ export const getTimeString = (date: Date): string => {
 export const setTime = (date: string, time: string): Date => {
   const dateFormated = date + " " + time;
   const dateTime = new Date(dateFormated);
-  console.log(dateTime);
 
   return dateTime;
 };

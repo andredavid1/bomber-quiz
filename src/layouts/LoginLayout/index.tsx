@@ -1,10 +1,13 @@
-import Loading from "components/Loading";
-import useConfig from "hooks/useConfig";
 import { NextPage } from "next";
 import Head from "next/head";
 import { ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
+
+import Loading from "components/Loading";
+import useConfig from "hooks/useConfig";
+
 import { Container, FormContainer } from "./styles";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ILoginLayoutProps {
   children: ReactNode;

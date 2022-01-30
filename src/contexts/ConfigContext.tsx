@@ -6,6 +6,7 @@ import { DefaultTheme, ThemeProvider } from "styled-components";
 import dark from "styles/themes/dark";
 import light from "styles/themes/light";
 import { AuthProvider } from "./AuthContext";
+import { DisciplineProvider } from "./DisciplineContext";
 import { UserProvider } from "./UserContext";
 
 interface IConfigContextProps {
@@ -70,7 +71,9 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
     >
       <ThemeProvider theme={theme}>
         <AuthProvider>
-          <UserProvider>{children}</UserProvider>
+          <UserProvider>
+            <DisciplineProvider>{children}</DisciplineProvider>
+          </UserProvider>
         </AuthProvider>
       </ThemeProvider>
     </ConfigContext.Provider>

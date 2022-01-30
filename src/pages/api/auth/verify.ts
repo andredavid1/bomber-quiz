@@ -47,13 +47,7 @@ export default async function handler(
 
         try {
           payload = verify(tokenBomberQuiz, jwtSecret) as JwtPayload;
-
-          if (payload.exp) {
-            console.log(toDate(payload.exp));
-          }
-          console.log("tem payload", payload);
         } catch (err) {
-          console.log("token expirou");
           return res
             .status(401)
             .json({ success: false, error: "Token de acesso expirado." });
@@ -67,7 +61,6 @@ export default async function handler(
 
         return res.status(200).json({ success: true, payload: userLogged });
       } catch (err: any) {
-        console.log(`${err}`);
         if (err instanceof AppError) {
           return res
             .status(err.statusCode)

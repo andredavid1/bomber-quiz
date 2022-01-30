@@ -1,5 +1,7 @@
 import { IUserDTO } from "dtos/IUserDTO";
+import useConfig from "hooks/useConfig";
 import useUser from "hooks/useUser";
+import router from "next/router";
 import { useEffect, useState } from "react";
 import {
   FiChevronDown,
@@ -8,6 +10,7 @@ import {
   FiChevronsLeft,
   FiChevronsRight,
   FiChevronUp,
+  FiDollarSign,
   FiEdit2,
   FiList,
   FiTrash2,
@@ -19,27 +22,25 @@ interface IListUserProps {
 }
 
 const ListUser = ({ show }: IListUserProps) => {
-  const {
-    users,
-    order,
-    listUsers,
-    handleSelectUser,
-    toggleOperation,
-    toggleOrder,
-  } = useUser();
-  const [usersView, setUsersView] = useState<IUserDTO[]>([]);
+  const { users, order, handleSelectUser, toggleOperation, toggleOrder } =
+    useUser();
+  const { toggleLoading } = useConfig();
+
   const [pages, setPages] = useState<number>(0);
   const [pageSelected, setPageSelected] = useState<number>(0);
+  const [usersView, setUsersView] = useState<IUserDTO[]>([]);
 
   const maxRowsPage = 2;
 
   useEffect(() => {
+    toggleLoading(true);
     toggleOperation("list");
 
     const pages = Math.ceil(users.length / maxRowsPage);
 
     setPages(pages);
     setPageSelected(1);
+    toggleLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,6 +64,11 @@ const ListUser = ({ show }: IListUserProps) => {
   const handleDetails = (user: IUserDTO) => {
     handleSelectUser(user);
     toggleOperation("details");
+  };
+
+  const handleSubscribe = (user: IUserDTO) => {
+    handleSelectUser(user);
+    router.push(`/usuarios/${user._id}/subscribe`);
   };
 
   const handleEdit = (user: IUserDTO) => {
@@ -114,24 +120,7 @@ const ListUser = ({ show }: IListUserProps) => {
                 ) : null}
               </button>
             </th>
-            <th className="optional">
-              <button
-                style={{
-                  textDecoration:
-                    order.field === "email" ? "underline" : "none",
-                }}
-                onClick={() => handleOrder("email")}
-              >
-                E-mail{" "}
-                {order.field === "email" ? (
-                  order.order === "asc" ? (
-                    <FiChevronUp />
-                  ) : (
-                    <FiChevronDown />
-                  )
-                ) : null}
-              </button>
-            </th>
+
             <th className="optional">
               <button
                 style={{
@@ -150,37 +139,68 @@ const ListUser = ({ show }: IListUserProps) => {
                 ) : null}
               </button>
             </th>
+            <th className="optional">
+              <button
+                style={{
+                  textDecoration:
+                    order.field === "registered" ? "underline" : "none",
+                }}
+                onClick={() => handleOrder("registered")}
+              >
+                Registrado{" "}
+                {order.field === "registered" ? (
+                  order.order === "asc" ? (
+                    <FiChevronUp />
+                  ) : (
+                    <FiChevronDown />
+                  )
+                ) : null}
+              </button>
+            </th>
             <th className="actions">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {usersView.map((user) => {
-            return (
-              <tr key={user._id}>
-                <td>{user.rg}</td>
-                <td className="bigger">{user.name}</td>
-                <td className="optional">{user.email}</td>
-                <td className="optional">
-                  {user.level === "admin"
-                    ? "administador"
-                    : user.level === "partner"
-                    ? "parceiro"
-                    : "cliente"}
-                </td>
-                <td className="actions">
-                  <button onClick={() => handleDetails(user)}>
-                    <FiList />
-                  </button>
-                  <button onClick={() => handleEdit(user)}>
-                    <FiEdit2 />
-                  </button>
-                  <button onClick={() => handleDelete(user)}>
-                    <FiTrash2 />
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+          {usersView.length > 0 ? (
+            usersView.map((user) => {
+              return (
+                <tr key={user._id}>
+                  <td>{user.rg}</td>
+                  <td className="bigger">{user.name}</td>
+                  <td className="optional">
+                    {user.level === "admin"
+                      ? "administador"
+                      : user.level === "partner"
+                      ? "parceiro"
+                      : "cliente"}
+                  </td>
+                  <td className="optional center">
+                    {user.registered ? "sim" : "não"}
+                  </td>
+                  <td className="actions">
+                    <button onClick={() => handleDetails(user)}>
+                      <FiList />
+                    </button>
+                    <button onClick={() => handleSubscribe(user)}>
+                      <FiDollarSign />
+                    </button>
+                    <button onClick={() => handleEdit(user)}>
+                      <FiEdit2 />
+                    </button>
+                    <button onClick={() => handleDelete(user)}>
+                      <FiTrash2 />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td className="center" colSpan={5}>
+                Nenhum usuário foi encontrado.
+              </td>
+            </tr>
+          )}
         </tbody>
         <tfoot>
           <tr>
