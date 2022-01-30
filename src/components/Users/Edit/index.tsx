@@ -1,5 +1,4 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import Select, { StylesConfig } from "react-select";
 
 import useUser from "hooks/useUser";
 
