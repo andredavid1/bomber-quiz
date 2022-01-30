@@ -1,20 +1,19 @@
-import { IUserDTO } from "dtos/IUserDTO";
-import useConfig from "hooks/useConfig";
-import useUser from "hooks/useUser";
 import router from "next/router";
 import { useEffect, useState } from "react";
 import {
   FiChevronDown,
-  FiChevronLeft,
-  FiChevronRight,
-  FiChevronsLeft,
-  FiChevronsRight,
   FiChevronUp,
   FiDollarSign,
   FiEdit2,
   FiList,
   FiTrash2,
 } from "react-icons/fi";
+
+import Pagination from "components/Pagination";
+import { IUserDTO } from "dtos/IUserDTO";
+import useConfig from "hooks/useConfig";
+import useUser from "hooks/useUser";
+
 import { Container } from "./styles";
 
 interface IListUserProps {
@@ -22,30 +21,33 @@ interface IListUserProps {
 }
 
 const ListUser = ({ show }: IListUserProps) => {
+  const { toggleLoading } = useConfig();
   const { users, order, handleSelectUser, toggleOperation, toggleOrder } =
     useUser();
-  const { toggleLoading } = useConfig();
 
   const [pages, setPages] = useState<number>(0);
-  const [pageSelected, setPageSelected] = useState<number>(0);
-  const [usersView, setUsersView] = useState<IUserDTO[]>([]);
+  const [pageSelected, setPageSelected] = useState<number>(1);
+  const [usersView, setUsersView] = useState<IUserDTO[] | null>(null);
 
-  const maxRowsPage = 2;
+  const maxRowsPerPage = process.env.NEXT_PUBLIC_MAX_ROW_PER_PAGES
+    ? parseInt(process.env.NEXT_PUBLIC_MAX_ROW_PER_PAGES.toString())
+    : 10;
 
   useEffect(() => {
-    toggleLoading(true);
-    toggleOperation("list");
-
-    const pages = Math.ceil(users.length / maxRowsPage);
+    const pages = Math.ceil(users ? users.length / maxRowsPerPage : 1);
 
     setPages(pages);
-    setPageSelected(1);
-    toggleLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    pagination();
+    toggleLoading(true);
+    const inicio = (pageSelected - 1) * maxRowsPerPage;
+    const final = pageSelected * maxRowsPerPage;
+
+    setUsersView(users ? users.slice(inicio, final) : null);
+
+    toggleLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSelected, users]);
 
@@ -54,11 +56,8 @@ const ListUser = ({ show }: IListUserProps) => {
     setPageSelected(1);
   };
 
-  const pagination = () => {
-    const inicio = (pageSelected - 1) * maxRowsPage;
-    const final = pageSelected * maxRowsPage;
-
-    setUsersView(users.slice(inicio, final));
+  const handlePageSelected = (page: number) => {
+    setPageSelected(page);
   };
 
   const handleDetails = (user: IUserDTO) => {
@@ -161,7 +160,7 @@ const ListUser = ({ show }: IListUserProps) => {
           </tr>
         </thead>
         <tbody>
-          {usersView.length > 0 ? (
+          {usersView && usersView.length > 0 ? (
             usersView.map((user) => {
               return (
                 <tr key={user._id}>
@@ -205,39 +204,11 @@ const ListUser = ({ show }: IListUserProps) => {
         <tfoot>
           <tr>
             <td colSpan={5}>
-              <div>
-                <button
-                  title="primeira página"
-                  disabled={pageSelected === 1}
-                  onClick={() => setPageSelected(1)}
-                >
-                  <FiChevronsLeft />
-                </button>
-                <button
-                  title="página anterior"
-                  disabled={pageSelected === 1}
-                  onClick={() => setPageSelected(pageSelected - 1)}
-                >
-                  <FiChevronLeft />
-                </button>
-
-                <span title="página atual">{pageSelected}</span>
-
-                <button
-                  title="próxima página"
-                  disabled={pageSelected === pages}
-                  onClick={() => setPageSelected(pageSelected + 1)}
-                >
-                  <FiChevronRight />
-                </button>
-                <button
-                  title="última página"
-                  disabled={pageSelected === pages}
-                  onClick={() => setPageSelected(pages)}
-                >
-                  <FiChevronsRight />
-                </button>
-              </div>
+              <Pagination
+                pages={pages}
+                pageSelected={pageSelected}
+                handlePageSelected={handlePageSelected}
+              />
             </td>
           </tr>
         </tfoot>

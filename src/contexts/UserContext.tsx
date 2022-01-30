@@ -1,11 +1,11 @@
 import axios from "axios";
 import router from "next/router";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { removeCookies } from "cookies-next";
 import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
 import useConfig from "hooks/useConfig";
-import { toast } from "react-toastify";
 
 interface IOrderProps {
   field?: string;
@@ -20,7 +20,7 @@ interface IUpdateData {
 }
 
 interface IUserContextProps {
-  users: IUserDTO[];
+  users: IUserDTO[] | null;
   userSelected: IUserDTO | null;
   operation: string;
   order: IOrderProps;
@@ -46,7 +46,7 @@ interface IUserContextProps {
 }
 
 const UserContext = createContext({
-  users: [] as IUserDTO[],
+  users: null,
   userSelected: null,
   operation: "list",
   order: { field: "createdAt", order: "desc" },
@@ -58,13 +58,19 @@ interface IUserProviderProps {
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
   const { toggleLoading } = useConfig();
-  const [users, setUsers] = useState<IUserDTO[]>([] as IUserDTO[]);
+
+  const [users, setUsers] = useState<IUserDTO[] | null>(null);
   const [userSelected, setUserSelected] = useState<IUserDTO | null>(null);
   const [operation, setOperation] = useState<string>("list");
   const [order, setOrder] = useState<IOrderProps>({
     field: "createdAt",
     order: "desc",
   });
+
+  useEffect(() => {
+    toggleOperation("list");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addUser = async (data: ICreateUserDTO): Promise<string> => {
     toggleLoading(true);
@@ -104,6 +110,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         setUsers(response.data.users);
       })
       .catch((err) => {
+        setUsers(null);
         toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
@@ -222,8 +229,10 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   };
 
   const toggleOperation = async (operation: string): Promise<void> => {
+    await toggleLoading(true);
     setOperation(operation);
-    listUsers(order);
+    await listUsers(order);
+    await toggleLoading(false);
   };
 
   const toggleOrder = (field: string): void => {

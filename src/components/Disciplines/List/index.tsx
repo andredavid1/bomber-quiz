@@ -1,27 +1,26 @@
 import { useEffect, useState } from "react";
 import {
   FiChevronDown,
-  FiChevronLeft,
-  FiChevronRight,
-  FiChevronsLeft,
-  FiChevronsRight,
   FiChevronUp,
   FiEdit2,
   FiList,
   FiTrash2,
 } from "react-icons/fi";
 
+import Pagination from "components/Pagination";
 import { IDisciplineDTO } from "dtos/IDisciplineDTO";
 import useConfig from "hooks/useConfig";
 import useDiscipline from "hooks/useDiscipline";
 
 import { Container } from "./styles";
+import { toast } from "react-toastify";
 
 interface IListDisciplineProps {
   show: boolean;
 }
 
 const ListDiscipline = ({ show }: IListDisciplineProps) => {
+  const { toggleLoading } = useConfig();
   const {
     disciplines,
     order,
@@ -29,28 +28,34 @@ const ListDiscipline = ({ show }: IListDisciplineProps) => {
     toggleOperation,
     toggleOrder,
   } = useDiscipline();
-  const { toggleLoading } = useConfig();
 
   const [pages, setPages] = useState<number>(0);
-  const [pageSelected, setPageSelected] = useState<number>(0);
-  const [disciplinesView, setDisciplinesView] = useState<IDisciplineDTO[]>([]);
+  const [pageSelected, setPageSelected] = useState<number>(1);
+  const [disciplinesView, setDisciplinesView] = useState<
+    IDisciplineDTO[] | null
+  >(null);
 
-  const maxRowsPage = 2;
+  const maxRowsPerPage = process.env.NEXT_PUBLIC_MAX_ROW_PER_PAGES
+    ? parseInt(process.env.NEXT_PUBLIC_MAX_ROW_PER_PAGES.toString())
+    : 10;
+
+  useEffect(() => {
+    const pages = Math.ceil(
+      disciplines ? disciplines.length / maxRowsPerPage : 1
+    );
+
+    setPages(pages);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageSelected]);
 
   useEffect(() => {
     toggleLoading(true);
-    toggleOperation("list");
+    const inicio = (pageSelected - 1) * maxRowsPerPage;
+    const final = pageSelected * maxRowsPerPage;
 
-    const pages = Math.ceil(disciplines.length / maxRowsPage);
+    setDisciplinesView(disciplines ? disciplines.slice(inicio, final) : null);
 
-    setPages(pages);
-    setPageSelected(1);
     toggleLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    pagination();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSelected, disciplines]);
 
@@ -59,11 +64,8 @@ const ListDiscipline = ({ show }: IListDisciplineProps) => {
     setPageSelected(1);
   };
 
-  const pagination = () => {
-    const inicio = (pageSelected - 1) * maxRowsPage;
-    const final = pageSelected * maxRowsPage;
-
-    setDisciplinesView(disciplines.slice(inicio, final));
+  const handlePageSelected = (page: number) => {
+    setPageSelected(page);
   };
 
   const handleDetails = (discipline: IDisciplineDTO) => {
@@ -108,7 +110,7 @@ const ListDiscipline = ({ show }: IListDisciplineProps) => {
           </tr>
         </thead>
         <tbody>
-          {disciplinesView.length > 0 ? (
+          {disciplinesView && disciplinesView.length > 0 ? (
             disciplinesView.map((discipline) => {
               return (
                 <tr key={discipline._id}>
@@ -138,40 +140,12 @@ const ListDiscipline = ({ show }: IListDisciplineProps) => {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={5}>
-              <div>
-                <button
-                  title="primeira página"
-                  disabled={pageSelected === 1}
-                  onClick={() => setPageSelected(1)}
-                >
-                  <FiChevronsLeft />
-                </button>
-                <button
-                  title="página anterior"
-                  disabled={pageSelected === 1}
-                  onClick={() => setPageSelected(pageSelected - 1)}
-                >
-                  <FiChevronLeft />
-                </button>
-
-                <span title="página atual">{pageSelected}</span>
-
-                <button
-                  title="próxima página"
-                  disabled={pageSelected === pages}
-                  onClick={() => setPageSelected(pageSelected + 1)}
-                >
-                  <FiChevronRight />
-                </button>
-                <button
-                  title="última página"
-                  disabled={pageSelected === pages}
-                  onClick={() => setPageSelected(pages)}
-                >
-                  <FiChevronsRight />
-                </button>
-              </div>
+            <td colSpan={2}>
+              <Pagination
+                pages={pages}
+                pageSelected={pageSelected}
+                handlePageSelected={handlePageSelected}
+              />
             </td>
           </tr>
         </tfoot>

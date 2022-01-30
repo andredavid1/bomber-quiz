@@ -1,9 +1,9 @@
 import axios from "axios";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { ICreateDisciplineDTO, IDisciplineDTO } from "dtos/IDisciplineDTO";
 import useConfig from "hooks/useConfig";
-import { toast } from "react-toastify";
 
 interface IOrderProps {
   field?: string;
@@ -11,7 +11,7 @@ interface IOrderProps {
 }
 
 interface IDisciplineContextProps {
-  disciplines: IDisciplineDTO[];
+  disciplines: IDisciplineDTO[] | null;
   disciplineSelected: IDisciplineDTO | null;
   operation: string;
   order: IOrderProps;
@@ -25,7 +25,7 @@ interface IDisciplineContextProps {
 }
 
 const DisciplineContext = createContext({
-  disciplines: [] as IDisciplineDTO[],
+  disciplines: null,
   disciplineSelected: null,
   operation: "list",
   order: { field: "createdAt", order: "desc" },
@@ -37,14 +37,20 @@ interface IDisciplineProviderProps {
 
 export const DisciplineProvider = ({ children }: IDisciplineProviderProps) => {
   const { toggleLoading } = useConfig();
-  const [disciplines, setDisciplines] = useState<IDisciplineDTO[]>([]);
-  const [disciplineSelected, setdisciplineSelected] =
+
+  const [disciplines, setDisciplines] = useState<IDisciplineDTO[] | null>(null);
+  const [disciplineSelected, setDisciplineSelected] =
     useState<IDisciplineDTO | null>(null);
   const [operation, setOperation] = useState<string>("list");
   const [order, setOrder] = useState<IOrderProps>({
     field: "createdAt",
     order: "desc",
   });
+
+  useEffect(() => {
+    toggleOperation("list");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addDiscipline = async (data: ICreateDisciplineDTO): Promise<string> => {
     toggleLoading(true);
@@ -84,6 +90,7 @@ export const DisciplineProvider = ({ children }: IDisciplineProviderProps) => {
         setDisciplines(response.data.disciplines);
       })
       .catch((err) => {
+        setDisciplines(null);
         toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
@@ -116,7 +123,7 @@ export const DisciplineProvider = ({ children }: IDisciplineProviderProps) => {
     await axios
       .delete(`/api/disciplines/${disciplineSelected?._id}`)
       .then((_response) => {
-        setdisciplineSelected(null);
+        setDisciplineSelected(null);
         listDisciplines(order);
         toggleOperation("list");
         toast.success("Matéria excluída com sucesso.");
@@ -131,12 +138,14 @@ export const DisciplineProvider = ({ children }: IDisciplineProviderProps) => {
   };
 
   const handleSelectDiscipline = (discipline: IDisciplineDTO | null): void => {
-    setdisciplineSelected(discipline);
+    setDisciplineSelected(discipline);
   };
 
   const toggleOperation = async (operation: string): Promise<void> => {
+    await toggleLoading(true);
     setOperation(operation);
-    listDisciplines(order);
+    await listDisciplines(order);
+    await toggleLoading(false);
   };
 
   const toggleOrder = (field: string): void => {

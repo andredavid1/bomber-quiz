@@ -12,15 +12,12 @@ import { UserProvider } from "./UserContext";
 interface IConfigContextProps {
   loading: boolean;
   theme: DefaultTheme;
-  operation: string;
-  toggleLoading: (show: boolean) => void;
+  toggleLoading: (show: boolean) => Promise<void>;
   toggleTheme: () => void;
-  toggleOperation: (operationSelected: string) => void;
 }
 
 const ConfigContext = createContext({
   loading: false,
-  operation: "list",
 } as IConfigContextProps);
 
 interface IConfigProviderProps {
@@ -28,19 +25,16 @@ interface IConfigProviderProps {
 }
 
 export const ConfigProvider = ({ children }: IConfigProviderProps) => {
-  const { verify } = useAuth();
-
   const [loading, setLoading] = useState<boolean>(false);
   const [theme, setTheme] = useState<DefaultTheme>(light);
-  const [operation, setOperation] = useState<string>("list");
 
   useEffect(() => {
     const themeSelected = localStorage.getItem("bomberQuizTheme");
     setTheme(themeSelected ? JSON.parse(themeSelected) : light);
   }, []);
 
-  const toggleLoading = (show: boolean) => {
-    setLoading(show);
+  const toggleLoading = async (show: boolean): Promise<void> => {
+    await setLoading(show);
   };
 
   const toggleTheme = () => {
@@ -53,20 +47,13 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
     }
   };
 
-  const toggleOperation = async (operationSelected: string): Promise<void> => {
-    await verify();
-    setOperation(operationSelected);
-  };
-
   return (
     <ConfigContext.Provider
       value={{
         loading,
         theme,
-        operation,
         toggleLoading,
         toggleTheme,
-        toggleOperation,
       }}
     >
       <ThemeProvider theme={theme}>
