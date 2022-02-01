@@ -45,6 +45,12 @@ const Header = () => {
           </Link>
         </li>
 
+        <li>
+          <Link href="/questoes" passHref>
+            <a>Questões</a>
+          </Link>
+        </li>
+
         <li className="profile">
           <button type="button" onClick={() => setShowProfile(!showProfile)}>
             Perfil
