@@ -5,8 +5,10 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import dark from "styles/themes/dark";
 import light from "styles/themes/light";
+import { AnswerProvider } from "./AnswerContext";
 import { AuthProvider } from "./AuthContext";
 import { DisciplineProvider } from "./DisciplineContext";
+import { QuestionProvider } from "./QuestionContext";
 import { UserProvider } from "./UserContext";
 
 interface IConfigContextProps {
@@ -59,7 +61,11 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
       <ThemeProvider theme={theme}>
         <AuthProvider>
           <UserProvider>
-            <DisciplineProvider>{children}</DisciplineProvider>
+            <DisciplineProvider>
+              <AnswerProvider>
+                <QuestionProvider>{children}</QuestionProvider>
+              </AnswerProvider>
+            </DisciplineProvider>
           </UserProvider>
         </AuthProvider>
       </ThemeProvider>
