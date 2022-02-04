@@ -14,6 +14,7 @@ import useDiscipline from "hooks/useDiscipline";
 
 import { Container } from "./styles";
 import { toast } from "react-toastify";
+import DisciplinesActions from "../Actions";
 
 interface IListDisciplineProps {
   show: boolean;
@@ -23,6 +24,7 @@ const ListDiscipline = ({ show }: IListDisciplineProps) => {
   const { toggleLoading } = useConfig();
   const {
     disciplines,
+    operation,
     order,
     handleSelectDiscipline,
     toggleOperation,
@@ -85,6 +87,7 @@ const ListDiscipline = ({ show }: IListDisciplineProps) => {
 
   return (
     <Container show={show}>
+      <DisciplinesActions show={operation === "list"} />
       <table>
         <thead>
           <tr>

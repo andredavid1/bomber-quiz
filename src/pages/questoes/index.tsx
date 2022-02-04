@@ -1,11 +1,11 @@
 import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 
-import AddQuestion from "components/Questions/Add";
-import DetailsQuestion from "components/Questions/Details";
+import AddQuestion from "components/management/Questions/Add";
+import DetailsQuestion from "components/management/Questions/Details";
 /* import DeleteQuestion from "components/Questions/Delete"; */
-import EditQuestion from "components/Questions/Edit";
-import ListQuestion from "components/Questions/List";
+import EditQuestion from "components/management/Questions/Edit";
+import ListQuestion from "components/management/Questions/List";
 import useQuestion from "hooks/useQuestion";
 import PagesLayout from "layouts/PagesLayout";
 import { useEffect } from "react";

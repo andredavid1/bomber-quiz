@@ -10,7 +10,7 @@ export const Container = styled.div.attrs((props: IContainerProps) => {
   display: ${(props) => (props.show ? "flex" : "none")};
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin: 20px 0;
   width: 96%;
 
   > button {

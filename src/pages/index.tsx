@@ -1,19 +1,16 @@
 import axios from "axios";
 import type { NextPage, NextPageContext } from "next";
-import { useEffect } from "react";
 
 import useAuth from "hooks/useAuth";
 import PagesLayout from "layouts/PagesLayout";
-import { toast } from "react-toastify";
+import HomeComponent from "components/Home";
 
 const Home: NextPage = () => {
   const { userLogged, logout } = useAuth();
 
   return (
     <PagesLayout>
-      <h2>Página Inicial</h2>
-      <h3>Usuário logado: {userLogged?.name}</h3>
-      <button onClick={logout}>Sair</button>
+      <HomeComponent />
     </PagesLayout>
   );
 };

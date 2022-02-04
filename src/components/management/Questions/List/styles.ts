@@ -12,11 +12,11 @@ export const Container = styled.div.attrs((props: IContainerProps) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin-bottom: 20px;
   width: 100%;
 
   table {
-    width: 90%;
+    width: 96%;
     border-collapse: collapse;
     border-radius: 8px;
     font-size: small;

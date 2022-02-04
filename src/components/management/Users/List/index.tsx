@@ -15,6 +15,7 @@ import useConfig from "hooks/useConfig";
 import useUser from "hooks/useUser";
 
 import { Container } from "./styles";
+import UsersActions from "../Actions";
 
 interface IListUserProps {
   show: boolean;
@@ -22,8 +23,14 @@ interface IListUserProps {
 
 const ListUser = ({ show }: IListUserProps) => {
   const { toggleLoading } = useConfig();
-  const { users, order, handleSelectUser, toggleOperation, toggleOrder } =
-    useUser();
+  const {
+    users,
+    operation,
+    order,
+    handleSelectUser,
+    toggleOperation,
+    toggleOrder,
+  } = useUser();
 
   const [pages, setPages] = useState<number>(0);
   const [pageSelected, setPageSelected] = useState<number>(1);
@@ -82,6 +89,7 @@ const ListUser = ({ show }: IListUserProps) => {
 
   return (
     <Container show={show}>
+      <UsersActions show={operation === "list"} />
       <table>
         <thead>
           <tr>

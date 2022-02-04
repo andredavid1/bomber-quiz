@@ -1,21 +1,25 @@
 import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 
-import DisciplinesActions from "components/Disciplines/Actions";
-import AddDiscipline from "components/Disciplines/Add";
-import DetailsDiscipline from "components/Disciplines/Details";
-import DeleteDiscipline from "components/Disciplines/Delete";
-import EditDiscipline from "components/Disciplines/Edit";
-import ListDiscipline from "components/Disciplines/List";
+import AddDiscipline from "components/management/Disciplines/Add";
+import DetailsDiscipline from "components/management/Disciplines/Details";
+import DeleteDiscipline from "components/management/Disciplines/Delete";
+import EditDiscipline from "components/management/Disciplines/Edit";
+import ListDiscipline from "components/management/Disciplines/List";
 import useDiscipline from "hooks/useDiscipline";
 import PagesLayout from "layouts/PagesLayout";
+import { useEffect } from "react";
 
 const Disciplines: NextPage = () => {
-  const { operation } = useDiscipline();
+  const { operation, toggleOperation } = useDiscipline();
+
+  useEffect(() => {
+    toggleOperation("list");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <PagesLayout>
-      <DisciplinesActions show={operation === "list"} />
       <AddDiscipline show={operation === "add"} />
       <ListDiscipline show={operation === "list"} />
       <DetailsDiscipline show={operation === "details"} />

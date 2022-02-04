@@ -1,21 +1,25 @@
 import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 
-import UsersActions from "components/Users/Actions";
-import AddUser from "components/Users/Add";
-import DetailsUser from "components/Users/Details";
-import DeleteUser from "components/Users/Delete";
-import EditUser from "components/Users/Edit";
-import ListUser from "components/Users/List";
+import AddUser from "components/management/Users/Add";
+import DetailsUser from "components/management/Users/Details";
+import DeleteUser from "components/management/Users/Delete";
+import EditUser from "components/management/Users/Edit";
+import ListUser from "components/management/Users/List";
 import useUser from "hooks/useUser";
 import PagesLayout from "layouts/PagesLayout";
+import { useEffect } from "react";
 
 const Users: NextPage = () => {
-  const { operation } = useUser();
+  const { operation, toggleOperation } = useUser();
+
+  useEffect(() => {
+    toggleOperation("list");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <PagesLayout>
-      <UsersActions show={operation === "list"} />
       <AddUser show={operation === "add"} />
       <ListUser show={operation === "list"} />
       <DetailsUser show={operation === "details"} />

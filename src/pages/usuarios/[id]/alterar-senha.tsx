@@ -2,13 +2,11 @@ import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 import { useRouter } from "next/router";
 
-import useUser from "hooks/useUser";
 import PagesLayout from "layouts/PagesLayout";
-import ChangePassword from "components/Users/ChangePassword";
+import ChangePassword from "components/management/Users/ChangePassword";
 
 const ChangePasswordPage: NextPage = () => {
   const router = useRouter();
-  const { operation } = useUser();
 
   const { id } = router.query;
   const idLogged = id ? id.toString() : "";
