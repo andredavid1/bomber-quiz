@@ -10,6 +10,8 @@ export const QuestionSchema = new mongoose.Schema(
     statement: { type: String, required: true },
     difficult: { type: String, default: "medium" },
     answers: [{ type: Schema.Types.ObjectId, ref: "Answer", required: true }],
+    qtdAnswers: { type: Number, default: 0 },
+    qtdCorrectAnswers: { type: Number, default: 0 },
   },
   { timestamps: true, collection: "questions" }
 );

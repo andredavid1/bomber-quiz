@@ -30,14 +30,14 @@ export const Container = styled.div`
           width: 100%;
 
           span {
-            min-width: 50%;
-
             &.title {
+              width: 59%;
               text-align: right;
               padding-right: 2px;
             }
 
             &.value {
+              width: 41%;
               text-align: left;
               padding-left: 2px;
             }

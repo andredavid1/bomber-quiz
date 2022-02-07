@@ -9,6 +9,7 @@ import { AnswerProvider } from "./AnswerContext";
 import { AuthProvider } from "./AuthContext";
 import { DisciplineProvider } from "./DisciplineContext";
 import { QuestionProvider } from "./QuestionContext";
+import { QuizProvider } from "./QuizContext";
 import { UserProvider } from "./UserContext";
 
 interface IConfigContextProps {
@@ -63,7 +64,9 @@ export const ConfigProvider = ({ children }: IConfigProviderProps) => {
           <UserProvider>
             <DisciplineProvider>
               <AnswerProvider>
-                <QuestionProvider>{children}</QuestionProvider>
+                <QuestionProvider>
+                  <QuizProvider>{children}</QuizProvider>
+                </QuestionProvider>
               </AnswerProvider>
             </DisciplineProvider>
           </UserProvider>

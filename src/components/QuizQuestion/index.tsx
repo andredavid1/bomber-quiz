@@ -1,4 +1,8 @@
+import { IAnswerDTO } from "dtos/IAnswerDTO";
+import useQuestion from "hooks/useQuestion";
+import useQuiz from "hooks/useQuiz";
 import Answer from "models/Answer";
+import router from "next/router";
 import { useEffect, useState } from "react";
 import {
   AnswerQuizContainer,
@@ -11,78 +15,157 @@ import {
 } from "./styles";
 
 const QuizQuestion = () => {
-  const [selected, setSelected] = useState<string>("");
+  const { quizSelected, toRespond, finishQuiz } = useQuiz();
+  const { handleSelectQuestionById, questionSelected } = useQuestion();
+  const [questionOrder, setQuestionOrder] = useState<number>(0);
+  const [answer, setAnswer] = useState<string>("");
 
-  const handleSelect = (questionSelected: string) => {
-    if (selected === questionSelected) {
-      setSelected("");
-    } else {
-      setSelected(questionSelected);
+  useEffect(() => {
+    if (quizSelected) {
+      handleSelectQuestionById(quizSelected.questions[questionOrder].id);
+      console.log(questionSelected);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionOrder, quizSelected]);
+
+  const handleAnswerSelect = async (
+    optionSelected: string,
+    answerId: string
+  ) => {
+    if (quizSelected) {
+      setAnswer(answer === optionSelected ? "" : optionSelected);
+      await toRespond(
+        quizSelected,
+        questionOrder,
+        answerId,
+        answer === optionSelected ? "" : optionSelected
+      );
     }
   };
 
+  const toggleOrder = (questionOrder: number, questionSelected: string) => {
+    setAnswer(questionSelected);
+    setQuestionOrder(questionOrder);
+  };
+
   const previousQuestion = () => {
-    setSelected("");
+    if (quizSelected) {
+      toggleOrder(
+        questionOrder - 1,
+        quizSelected.questions[questionOrder - 1].answered
+      );
+    }
   };
 
   const nextQuestion = () => {
-    setSelected("");
+    if (quizSelected) {
+      toggleOrder(
+        questionOrder + 1,
+        quizSelected.questions[questionOrder + 1].answered
+      );
+    }
   };
 
-  const finishQuiz = () => {
-    setSelected("");
+  const handleFinishQuiz = () => {
+    toggleOrder(0, "");
+    finishQuiz();
+  };
+
+  const handleExit = () => {
+    router.push("/");
   };
 
   return (
     <Container>
       <QuestionContainer>
-        <Statement>Enunciado</Statement>
-        <AnswersContainer>
-          <AnswerRow
-            className={`${selected === "A" && "selected"}`}
-            onClick={() => handleSelect("A")}
-          >
-            <span className={`option ${selected === "A" && "selected"}`}>
-              A
-            </span>
-            <span className="value">Resposta A</span>
-          </AnswerRow>
-          <AnswerRow
-            className={`${selected === "B" && "selected"}`}
-            onClick={() => handleSelect("B")}
-          >
-            <span className={`option ${selected === "B" && "selected"}`}>
-              B
-            </span>
-            <span className="value">Resposta B</span>
-          </AnswerRow>
-          <AnswerRow
-            className={`${selected === "C" && "selected"}`}
-            onClick={() => handleSelect("C")}
-          >
-            <span className={`option ${selected === "C" && "selected"}`}>
-              C
-            </span>
-            <span className="value">Resposta C</span>
-          </AnswerRow>
-          <AnswerRow
-            className={`${selected === "D" && "selected"}`}
-            onClick={() => handleSelect("D")}
-          >
-            <span className={`option ${selected === "D" && "selected"}`}>
-              D
-            </span>
-            <span className="value">Resposta D</span>
-          </AnswerRow>
-        </AnswersContainer>
+        <div>{questionSelected?.discipline.name}</div>
+        <Statement>{questionSelected?.statement}</Statement>
+        {questionSelected && (
+          <AnswersContainer>
+            <AnswerRow
+              className={`${answer === "A" && "selected"}`}
+              onClick={() =>
+                handleAnswerSelect("A", questionSelected.answers[0]._id)
+              }
+            >
+              <span className={`option ${answer === "A" && "selected"}`}>
+                A
+              </span>
+              <span className="value">
+                {questionSelected?.answers[0].value}
+              </span>
+            </AnswerRow>
+            <AnswerRow
+              className={`${answer === "B" && "selected"}`}
+              onClick={() =>
+                handleAnswerSelect("B", questionSelected.answers[1]._id)
+              }
+            >
+              <span className={`option ${answer === "B" && "selected"}`}>
+                B
+              </span>
+              <span className="value">
+                {questionSelected?.answers[1].value}
+              </span>
+            </AnswerRow>
+            <AnswerRow
+              className={`${answer === "C" && "selected"}`}
+              onClick={() =>
+                handleAnswerSelect("C", questionSelected.answers[2]._id)
+              }
+            >
+              <span className={`option ${answer === "C" && "selected"}`}>
+                C
+              </span>
+              <span className="value">
+                {questionSelected?.answers[2].value}
+              </span>
+            </AnswerRow>
+            <AnswerRow
+              className={`${answer === "D" && "selected"}`}
+              onClick={() =>
+                handleAnswerSelect("D", questionSelected.answers[3]._id)
+              }
+            >
+              <span className={`option ${answer === "D" && "selected"}`}>
+                D
+              </span>
+              <span className="value">
+                {questionSelected?.answers[3].value}
+              </span>
+            </AnswerRow>
+          </AnswersContainer>
+        )}
         <QuizActions>
-          <button type="button" onClick={() => previousQuestion()}>
+          <button
+            type="button"
+            disabled={questionOrder <= 0}
+            onClick={() => previousQuestion()}
+          >
             Anterior
           </button>
-          <button type="button" onClick={() => finishQuiz()}>
-            Finalizar
-          </button>
-          <button type="button" onClick={() => nextQuestion()}>
+          {!quizSelected?.finished ? (
+            <button type="button" onClick={() => handleFinishQuiz()}>
+              Finalizar
+            </button>
+          ) : (
+            <button
+              className="success"
+              type="button"
+              onClick={() => handleExit()}
+            >
+              Sair
+            </button>
+          )}
+          <button
+            type="button"
+            disabled={
+              quizSelected
+                ? questionOrder >= quizSelected.questions.length - 1
+                : questionOrder >= 49
+            }
+            onClick={() => nextQuestion()}
+          >
             Próxima
           </button>
         </QuizActions>
@@ -95,365 +178,34 @@ const QuizQuestion = () => {
           <div className="headerOption">C</div>
           <div className="headerOption">D</div>
         </div>
-        <div className="row">
-          <div className="number">1</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">2</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">3</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">4</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">5</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">6</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">7</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">8</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">9</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">10</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">11</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">12</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">13</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">14</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">15</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">16</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">17</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">18</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">19</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">20</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">21</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">22</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">23</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">24</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">25</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-      </AnswerQuizContainer>
-      <AnswerQuizContainer>
-        <div className="header">
-          <div className="headerNumber">&nbsp;</div>
-          <div className="headerOption">A</div>
-          <div className="headerOption">B</div>
-          <div className="headerOption">C</div>
-          <div className="headerOption">D</div>
-        </div>
-        <div className="row">
-          <div className="number">26</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">27</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">28</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">29</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">30</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">31</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">32</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">33</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">34</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">35</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">36</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">37</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">38</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">39</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">40</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">41</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">42</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">43</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">44</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">45</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
-        <div className="row">
-          <div className="number">46</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">47</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">48</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">49</div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-          <div className="option"></div>
-        </div>
-        <div className="row">
-          <div className="number">50</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-          <div className="option">&nbsp;</div>
-        </div>
+        {quizSelected &&
+          quizSelected.questions.map((question) => (
+            <div
+              className="row"
+              key={question.id}
+              onClick={() => toggleOrder(question.order - 1, question.answered)}
+            >
+              <div
+                className={`number ${
+                  questionOrder + 1 === question.order && "selected"
+                }`}
+              >
+                {question.order}
+              </div>
+              <div
+                className={`option ${question.answered === "A" && "selected"}`}
+              ></div>
+              <div
+                className={`option ${question.answered === "B" && "selected"}`}
+              ></div>
+              <div
+                className={`option ${question.answered === "C" && "selected"}`}
+              ></div>
+              <div
+                className={`option ${question.answered === "D" && "selected"}`}
+              ></div>
+            </div>
+          ))}
       </AnswerQuizContainer>
     </Container>
   );

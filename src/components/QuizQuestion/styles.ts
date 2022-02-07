@@ -14,9 +14,17 @@ export const QuestionContainer = styled.div`
   flex: 1;
 `;
 
+export const Discipline = styled.div`
+  margin: 20px;
+  text-align: justify;
+  width: 400px;
+`;
+
 export const Statement = styled.div`
   margin: 25px;
   text-align: justify;
+  width: 400px;
+  font-weight: bold;
 `;
 
 export const AnswersContainer = styled.div`
@@ -79,6 +87,23 @@ export const QuizActions = styled.div`
 
     &:hover {
       background-color: ${(props) => shade(0.2, props.theme.colors.infoBg)};
+    }
+
+    &:disabled {
+      background: none;
+      color: ${(props) => props.theme.colors.text};
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    &.success {
+      background-color: ${(props) => props.theme.colors.successBg};
+      color: ${(props) => props.theme.colors.white};
+
+      &:hover {
+        background-color: ${(props) =>
+          shade(0.2, props.theme.colors.successBg)};
+      }
     }
   }
 `;
@@ -146,6 +171,13 @@ export const AnswerQuizContainer = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+
+        &.selected {
+          font-weight: bold;
+          border-radius: 50%;
+          background-color: ${(props) => props.theme.colors.infoBg};
+          color: ${(props) => props.theme.colors.white};
+        }
       }
 
       div.option {
@@ -153,6 +185,10 @@ export const AnswerQuizContainer = styled.div`
         width: 20px;
         height: 20px;
         margin-left: 5px;
+      }
+
+      div.selected {
+        background-color: ${(props) => props.theme.colors.infoBg};
       }
     }
   }

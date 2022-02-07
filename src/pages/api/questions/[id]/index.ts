@@ -17,13 +17,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         await connectDB();
 
-        const discipline: IQuestionDTO = await Discipline.findById(id).exec();
+        const question: IQuestionDTO = await Question.findById(id)
+          .populate("discipline")
+          .populate({
+            path: "answers",
+            model: "Answer",
+          })
+          .exec();
 
-        if (!discipline) {
-          throw new AppError("Matéria não encontrada.", 404);
+        if (!question) {
+          throw new AppError("Questão não encontrada.", 404);
         }
 
-        res.status(201).json({ success: true, discipline });
+        res.status(201).json({ success: true, question });
       } catch (err) {
         if (err instanceof AppError) {
           res
@@ -42,8 +48,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case "PUT":
       try {
         await connectDB();
-
-        console.log(req.body);
 
         const questionToUpdate: IQuestionDTO = await Question.findById(
           id
@@ -119,7 +123,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             .status(err.statusCode)
             .json({ success: false, errorMessage: err.message });
         } else {
-          console.log(err);
           res.status(500).json({
             success: false,
             errorMessage: "Erro na conexão com o servidor.",

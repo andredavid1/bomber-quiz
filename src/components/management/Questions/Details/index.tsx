@@ -34,8 +34,6 @@ const DetailsQuestion = ({ show }: IDetailsQuestionProps) => {
   useEffect(() => {
     listDisciplines({ field: "name", order: "asc" });
 
-    console.log(questionSelected);
-
     if (questionSelected) {
       setDiscipline(questionSelected.discipline);
       setStatement(questionSelected.statement);

@@ -4,10 +4,6 @@ import { ICreateDisciplineDTO } from "dtos/IDisciplineDTO";
 import AppError from "erros/AppError";
 import { connectDB } from "lib/mongodb";
 import Discipline from "models/Discipline";
-import Question from "models/Question";
-import { ICreateQuestionDTO } from "dtos/IQuestionDTO";
-import { IAnswerDTO } from "dtos/IAnswerDTO";
-import Answer from "models/Answer";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
@@ -18,16 +14,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         await connectDB();
 
-        const questions = await Question.find({})
-          .populate("discipline")
-          .populate({
-            path: "answers",
-            model: "Answer",
-          })
+        const disciplines = await Discipline.find()
           .sort([[field, order]])
           .exec();
 
-        res.status(200).json({ success: true, questions });
+        res.status(200).json({ success: true, disciplines });
       } catch (err) {
         if (err instanceof AppError) {
           res
@@ -46,12 +37,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         await connectDB();
 
-        const { discipline, statement, difficult, answers } = req.body
-          .data as ICreateQuestionDTO;
-
         const requiredFields = {
-          statement: "enunciado",
-          difficult: "dificuldade",
+          name: "nome",
         };
 
         for (const [key, value] of Object.entries(requiredFields)) {
@@ -62,48 +49,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         }
 
-        if (!discipline) {
-          throw new AppError("Preencha o campo matéria", 400);
-        }
+        const { name } = req.body.data;
 
-        if (!answers || answers.length < 4) {
-          throw new AppError("Preencha todas as respostas", 400);
-        }
-
-        const questionStatementAlreadyExists = await Question.findOne({
-          statement,
+        const disciplineNameAlreadyExists = await Discipline.findOne({
+          name,
         }).exec();
 
-        if (questionStatementAlreadyExists) {
-          throw new AppError(
-            "Já existe uma questão cadastrada com esse enunciado.",
-            400
-          );
+        if (disciplineNameAlreadyExists) {
+          throw new AppError("Já existe uma matéria cadastrada com esse nome.");
         }
 
-        let answersSaved: IAnswerDTO[] = [];
-
-        answers.forEach(async (answer) => {
-          const newAnswer = new Answer({
-            value: answer.value,
-            correct: answer.correct,
-          });
-          answersSaved.push(newAnswer);
-          await newAnswer.save();
-        });
-
-        const data: ICreateQuestionDTO = {
-          discipline,
-          statement,
-          difficult,
-          answers: answersSaved,
+        const data: ICreateDisciplineDTO = {
+          name,
         };
 
-        const question = new Question(data);
+        const discipline = new Discipline(data);
 
-        await question.save();
+        await discipline.save();
 
-        res.status(201).json({ success: true, question });
+        res.status(201).json({ success: true, discipline });
       } catch (err) {
         if (err instanceof AppError) {
           res

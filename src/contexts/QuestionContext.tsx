@@ -25,6 +25,7 @@ interface IQuestionContextProps {
   updateQuestion: (id: string, data: IQuestionDTO) => Promise<IResponse>;
   deleteQuestion: () => Promise<void>;
   handleSelectQuestion: (question: IQuestionDTO | null) => void;
+  handleSelectQuestionById: (id: string | null) => void;
   toggleOperation: (operation: string) => Promise<void>;
   toggleOrder: (field: string) => void;
 }
@@ -158,6 +159,23 @@ export const QuestionProvider = ({ children }: IQuestionProviderProps) => {
     setQuestionSelected(question);
   };
 
+  const handleSelectQuestionById = async (id: string | null): Promise<void> => {
+    toggleLoading(true);
+
+    await axios
+      .get(`/api/questions/${id}`)
+      .then((response) => {
+        setQuestionSelected(response.data.question);
+      })
+      .catch((err) => {
+        toggleOperation("list");
+        toast.error(err.response.data.errorMessage);
+      })
+      .finally(async () => {
+        toggleLoading(false);
+      });
+  };
+
   const toggleOperation = async (operation: string): Promise<void> => {
     await toggleLoading(true);
     setOperation(operation);
@@ -192,6 +210,7 @@ export const QuestionProvider = ({ children }: IQuestionProviderProps) => {
         updateQuestion,
         deleteQuestion,
         handleSelectQuestion,
+        handleSelectQuestionById,
         toggleOperation,
         toggleOrder,
       }}

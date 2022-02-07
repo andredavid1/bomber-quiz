@@ -1,8 +1,8 @@
 import DisciplineContext from "contexts/DisciplineContext";
 import { useContext } from "react";
 
-const useUser = () => {
+const useDiscipline = () => {
   return useContext(DisciplineContext);
 };
 
-export default useUser;
+export default useDiscipline;

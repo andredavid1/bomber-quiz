@@ -19,6 +19,11 @@ interface IUpdateData {
   level: "admin" | "partner" | "customer";
 }
 
+interface IUserPerformance {
+  quizAnswered: number;
+  average: number;
+}
+
 interface IUserContextProps {
   users: IUserDTO[] | null;
   userSelected: IUserDTO | null;
@@ -40,6 +45,7 @@ interface IUserContextProps {
     amount: number
   ) => Promise<void>;
   deleteUser: () => Promise<void>;
+  getPerformance: (userId: string) => Promise<IUserPerformance>;
   handleSelectUser: (user: IUserDTO | null) => void;
   toggleOperation: (operation: string) => Promise<void>;
   toggleOrder: (field: string) => void;
@@ -224,6 +230,26 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       });
   };
 
+  const getPerformance = async (userId: string): Promise<IUserPerformance> => {
+    toggleLoading(true);
+
+    let performance: IUserPerformance = { quizAnswered: 0, average: 0 };
+
+    await axios
+      .get(`/api/users/${userId}/performance`)
+      .then((response) => {
+        performance = response.data.performance;
+      })
+      .catch((err) => {
+        toast.error(err.response.data.errorMessage);
+      })
+      .finally(async () => {
+        toggleLoading(false);
+      });
+
+    return performance;
+  };
+
   const handleSelectUser = (user: IUserDTO | null): void => {
     setUserSelected(user);
   };
@@ -263,6 +289,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         changePassword,
         subscribeUser,
         deleteUser,
+        getPerformance,
         handleSelectUser,
         toggleOperation,
         toggleOrder,

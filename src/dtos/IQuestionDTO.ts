@@ -6,6 +6,8 @@ export interface ICreateQuestionDTO {
   statement: string;
   difficult: "veryEasy" | "easy" | "medium" | "hard" | "veryHard";
   answers: IAnswerDTO[];
+  qtdAnswers: number;
+  qtdCorrectAnswers: number;
 }
 
 export interface IQuestionDTO extends ICreateQuestionDTO {
