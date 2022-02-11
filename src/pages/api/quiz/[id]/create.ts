@@ -96,7 +96,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             .status(err.statusCode)
             .json({ success: false, errorMessage: err.message });
         } else {
-          res.status(500).json(err);
+          res.status(500).json({
+            success: false,
+            errorMessage: `${err}`,
+          });
         }
       }
 
