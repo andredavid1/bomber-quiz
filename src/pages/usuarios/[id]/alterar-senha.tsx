@@ -2,8 +2,8 @@ import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 import { useRouter } from "next/router";
 
-import PagesLayout from "layouts/PagesLayout";
 import ChangePassword from "components/management/Users/ChangePassword";
+import PagesLayout from "layouts/PagesLayout";
 
 const ChangePasswordPage: NextPage = () => {
   const router = useRouter();

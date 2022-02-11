@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { IAnswerDTO } from "dtos/IAnswerDTO";
+import { IDisciplineDTO } from "dtos/IDisciplineDTO";
+import useDiscipline from "hooks/useDiscipline";
 import useQuestion from "hooks/useQuestion";
 
 import {
@@ -9,9 +12,6 @@ import {
   Form,
   RowForm,
 } from "./styles";
-import { IDisciplineDTO } from "dtos/IDisciplineDTO";
-import { IAnswerDTO } from "dtos/IAnswerDTO";
-import useDiscipline from "hooks/useDiscipline";
 
 const clearAnswer: IAnswerDTO = { _id: "", value: "", correct: false };
 

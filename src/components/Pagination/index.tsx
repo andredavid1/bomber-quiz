@@ -4,6 +4,7 @@ import {
   FiChevronsLeft,
   FiChevronsRight,
 } from "react-icons/fi";
+
 import { Container } from "./styles";
 
 interface IPaginationProps {

@@ -1,6 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { removeCookies } from "cookies-next";
-import AppError from "erros/AppError";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+import AppError from "errors/AppError";
 
 interface IResponse {
   success: boolean;

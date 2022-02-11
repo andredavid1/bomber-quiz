@@ -1,16 +1,15 @@
-import axios from "axios";
-import { getCookie } from "cookies-next";
-import useAuth from "hooks/useAuth";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { DefaultTheme, ThemeProvider } from "styled-components";
-import dark from "styles/themes/dark";
-import light from "styles/themes/light";
+
 import { AnswerProvider } from "./AnswerContext";
 import { AuthProvider } from "./AuthContext";
 import { DisciplineProvider } from "./DisciplineContext";
 import { QuestionProvider } from "./QuestionContext";
 import { QuizProvider } from "./QuizContext";
 import { UserProvider } from "./UserContext";
+
+import dark from "styles/themes/dark";
+import light from "styles/themes/light";
 
 interface IConfigContextProps {
   loading: boolean;

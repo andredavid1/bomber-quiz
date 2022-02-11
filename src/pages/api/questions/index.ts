@@ -1,13 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { ICreateDisciplineDTO } from "dtos/IDisciplineDTO";
-import AppError from "erros/AppError";
-import { connectDB } from "lib/mongodb";
-import Discipline from "models/Discipline";
-import Question from "models/Question";
-import { ICreateQuestionDTO } from "dtos/IQuestionDTO";
 import { IAnswerDTO } from "dtos/IAnswerDTO";
+import { ICreateQuestionDTO } from "dtos/IQuestionDTO";
+import AppError from "errors/AppError";
+import { connectDB } from "lib/mongodb";
 import Answer from "models/Answer";
+import Question from "models/Question";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

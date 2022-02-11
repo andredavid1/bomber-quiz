@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { IDisciplineDTO } from "dtos/IDisciplineDTO";
-import AppError from "erros/AppError";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
 import Discipline from "models/Discipline";
 

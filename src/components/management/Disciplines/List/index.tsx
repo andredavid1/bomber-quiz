@@ -7,14 +7,13 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
+import DisciplinesActions from "../Actions";
 import Pagination from "components/Pagination";
 import { IDisciplineDTO } from "dtos/IDisciplineDTO";
 import useConfig from "hooks/useConfig";
 import useDiscipline from "hooks/useDiscipline";
 
 import { Container } from "./styles";
-import { toast } from "react-toastify";
-import DisciplinesActions from "../Actions";
 
 interface IListDisciplineProps {
   show: boolean;

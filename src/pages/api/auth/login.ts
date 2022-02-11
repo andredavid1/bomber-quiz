@@ -1,12 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { compare } from "bcrypt";
 import { setCookies } from "cookies-next";
-import { decode, JwtPayload, sign } from "jsonwebtoken";
+import { addDays } from "date-fns";
+import { sign } from "jsonwebtoken";
+import type { NextApiRequest, NextApiResponse } from "next";
+
 import { IUserDTO } from "dtos/IUserDTO";
-import AppError from "erros/AppError";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
-import { addDays } from "date-fns";
 
 interface IResponse {
   success: boolean;

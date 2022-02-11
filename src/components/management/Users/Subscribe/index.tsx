@@ -2,11 +2,10 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import router from "next/router";
 
+import useAuth from "hooks/useAuth";
 import useUser from "hooks/useUser";
 
 import { Container, Form, RowForm } from "./styles";
-import useAuth from "hooks/useAuth";
-import { IUserDTO } from "dtos/IUserDTO";
 
 interface ISubscribeUserProps {
   id: string;

@@ -9,13 +9,13 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
+import UsersActions from "../Actions";
 import Pagination from "components/Pagination";
 import { IUserDTO } from "dtos/IUserDTO";
 import useConfig from "hooks/useConfig";
 import useUser from "hooks/useUser";
 
 import { Container } from "./styles";
-import UsersActions from "../Actions";
 
 interface IListUserProps {
   show: boolean;

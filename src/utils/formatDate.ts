@@ -1,4 +1,4 @@
-import { getDate, getMonth, getYear, format } from "date-fns";
+import { format } from "date-fns";
 
 export const formatDate = (date: Date): string => {
   const day = date.getDate();

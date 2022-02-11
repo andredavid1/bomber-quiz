@@ -1,9 +1,9 @@
 import axios from "axios";
 import type { NextPage, NextPageContext } from "next";
 
+import HomeComponent from "components/Home";
 import useAuth from "hooks/useAuth";
 import PagesLayout from "layouts/PagesLayout";
-import HomeComponent from "components/Home";
 
 const Home: NextPage = () => {
   const { userLogged, logout } = useAuth();

@@ -1,10 +1,8 @@
-import { IQuizDTO } from "dtos/IQuizDTO";
 import Image from "next/image";
 import useAuth from "hooks/useAuth";
 import useConfig from "hooks/useConfig";
 import useQuiz from "hooks/useQuiz";
 import useUser from "hooks/useUser";
-import router from "next/router";
 import { useEffect, useState } from "react";
 
 import quizImage from "/public/quiz.jpg";
@@ -17,7 +15,6 @@ interface IUserPerformance {
 
 const HomeComponent = () => {
   const { userLogged } = useAuth();
-  const { toggleLoading } = useConfig();
   const { createQuiz } = useQuiz();
   const { getPerformance } = useUser();
   const [performance, setPerformance] = useState<IUserPerformance>(

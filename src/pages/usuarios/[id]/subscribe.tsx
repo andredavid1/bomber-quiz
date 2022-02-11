@@ -2,8 +2,8 @@ import axios from "axios";
 import { NextPage, NextPageContext } from "next";
 import { useRouter } from "next/router";
 
-import PagesLayout from "layouts/PagesLayout";
 import SubscribeUser from "components/management/Users/Subscribe";
+import PagesLayout from "layouts/PagesLayout";
 
 const SubscribePage: NextPage = () => {
   const router = useRouter();

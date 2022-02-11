@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { IAnswerDTO } from "dtos/IAnswerDTO";
 import { IQuestionDTO } from "dtos/IQuestionDTO";
-import AppError from "erros/AppError";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
+import Answer from "models/Answer";
 import Discipline from "models/Discipline";
 import Question from "models/Question";
-import { IAnswerDTO } from "dtos/IAnswerDTO";
-import Answer from "models/Answer";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

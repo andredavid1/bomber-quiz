@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import AppError from "erros/AppError";
+import AppError from "errors/AppError";
 import { toast } from "react-toastify";
 
 const uri = process.env.MONGODB_URI;

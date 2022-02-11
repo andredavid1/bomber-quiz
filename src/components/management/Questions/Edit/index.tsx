@@ -1,5 +1,10 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
+import { IAnswerDTO } from "dtos/IAnswerDTO";
+import { IDisciplineDTO } from "dtos/IDisciplineDTO";
+import { IQuestionDTO } from "dtos/IQuestionDTO";
+import useDiscipline from "hooks/useDiscipline";
 import useQuestion from "hooks/useQuestion";
 
 import {
@@ -9,11 +14,6 @@ import {
   Form,
   RowForm,
 } from "./styles";
-import { IDisciplineDTO } from "dtos/IDisciplineDTO";
-import { IAnswerDTO } from "dtos/IAnswerDTO";
-import { IQuestionDTO } from "dtos/IQuestionDTO";
-import { toast } from "react-toastify";
-import useDiscipline from "hooks/useDiscipline";
 
 const clearAnswer: IAnswerDTO = { _id: "", value: "", correct: false };
 
@@ -175,6 +175,8 @@ const EditQuestion = ({ show }: IEditQuestionProps) => {
       statement,
       difficult,
       answers,
+      qtdAnswers: questionSelected.qtdAnswers,
+      qtdCorrectAnswers: questionSelected.qtdCorrectAnswers,
       createdAt: questionSelected.createdAt,
       updatedAt: questionSelected.updatedAt,
     };

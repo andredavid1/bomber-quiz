@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NextPage, NextPageContext } from "next";
+import { useEffect } from "react";
 
 import AddUser from "components/management/Users/Add";
 import DetailsUser from "components/management/Users/Details";
@@ -8,7 +9,6 @@ import EditUser from "components/management/Users/Edit";
 import ListUser from "components/management/Users/List";
 import useUser from "hooks/useUser";
 import PagesLayout from "layouts/PagesLayout";
-import { useEffect } from "react";
 
 const Users: NextPage = () => {
   const { operation, toggleOperation } = useUser();

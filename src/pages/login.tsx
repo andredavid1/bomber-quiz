@@ -1,7 +1,8 @@
-import useAuth from "hooks/useAuth";
-import LoginLayout from "layouts/LoginLayout";
 import { NextPage } from "next";
 import { ChangeEvent, FormEvent, useState } from "react";
+
+import useAuth from "hooks/useAuth";
+import LoginLayout from "layouts/LoginLayout";
 
 const Login: NextPage = () => {
   const { login } = useAuth();

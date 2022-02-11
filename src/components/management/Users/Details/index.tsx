@@ -1,6 +1,8 @@
-import useUser from "hooks/useUser";
-import { Container, Form, RowForm } from "./styles";
 import { useEffect, useState } from "react";
+
+import useUser from "hooks/useUser";
+
+import { Container, Form, RowForm } from "./styles";
 
 interface IDetailsUserProps {
   show: boolean;

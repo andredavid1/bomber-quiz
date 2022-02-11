@@ -3,7 +3,7 @@ import { isBefore } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { ICreateUserDTO } from "dtos/IUserDTO";
-import AppError from "erros/AppError";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
 

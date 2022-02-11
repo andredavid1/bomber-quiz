@@ -7,13 +7,13 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
+import QuestionsActions from "../Actions";
 import Pagination from "components/Pagination";
 import { IQuestionDTO } from "dtos/IQuestionDTO";
 import useConfig from "hooks/useConfig";
 import useQuestion from "hooks/useQuestion";
 
 import { Container } from "./styles";
-import QuestionsActions from "../Actions";
 
 interface IListQuestionsProps {
   show: boolean;

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NextPage, NextPageContext } from "next";
+import { useEffect } from "react";
 
 import AddDiscipline from "components/management/Disciplines/Add";
 import DetailsDiscipline from "components/management/Disciplines/Details";
@@ -8,7 +9,6 @@ import EditDiscipline from "components/management/Disciplines/Edit";
 import ListDiscipline from "components/management/Disciplines/List";
 import useDiscipline from "hooks/useDiscipline";
 import PagesLayout from "layouts/PagesLayout";
-import { useEffect } from "react";
 
 const Disciplines: NextPage = () => {
   const { operation, toggleOperation } = useDiscipline();

@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { decode, JwtPayload, verify } from "jsonwebtoken";
-import AppError from "erros/AppError";
-import { toDate } from "date-fns";
+import { JwtPayload, verify } from "jsonwebtoken";
+import AppError from "errors/AppError";
 
 interface IUserLogged {
   id: string;

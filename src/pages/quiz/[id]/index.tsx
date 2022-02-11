@@ -1,5 +1,4 @@
-import { Container } from "components/Content/styles";
-import QuizContent from "components/Quiz";
+import QuizContent from "components/QuizContent";
 import QuizLayout from "layouts/QuizLayout";
 
 const Quiz = () => {

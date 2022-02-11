@@ -3,15 +3,13 @@ import Head from "next/head";
 import { ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
 
-import Content from "components/Content";
 import Footer from "components/Footer";
-import Header from "components/Header";
 import Loading from "components/Loading";
+import QuizContainer from "components/QuizContainer";
 import useConfig from "hooks/useConfig";
 
 import { Container } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
-import QuizContainer from "components/QuizContainer";
 
 interface IQuizLayoutProps {
   children: ReactNode;

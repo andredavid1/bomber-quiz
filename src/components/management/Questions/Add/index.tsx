@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { IAnswerDTO } from "dtos/IAnswerDTO";
+import { IDisciplineDTO } from "dtos/IDisciplineDTO";
 import { ICreateQuestionDTO } from "dtos/IQuestionDTO";
 import useDiscipline from "hooks/useDiscipline";
 import useQuestion from "hooks/useQuestion";
@@ -12,8 +14,6 @@ import {
   Form,
   RowForm,
 } from "./styles";
-import { IDisciplineDTO } from "dtos/IDisciplineDTO";
-import { IAnswerDTO } from "dtos/IAnswerDTO";
 
 const clearAnswer: IAnswerDTO = { _id: "", value: "", correct: false };
 
@@ -160,6 +160,8 @@ const AddQuestion = ({ show }: IAddQuestionProps) => {
       statement,
       difficult,
       answers,
+      qtdAnswers: 0,
+      qtdCorrectAnswers: 0,
     };
 
     const response = await addQuestion(data);

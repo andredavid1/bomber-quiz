@@ -1,15 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { IDisciplineDTO } from "dtos/IDisciplineDTO";
-import AppError from "erros/AppError";
+import { IQuestionDTO } from "dtos/IQuestionDTO";
+import { IQuizDTO } from "dtos/IQuizDTO";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
 import Discipline from "models/Discipline";
-import User from "models/User";
-import { IUserDTO } from "dtos/IUserDTO";
-import Quiz from "models/Quiz";
-import { ICreateQuizDTO, IQuizDTO, IQuizQuestion } from "dtos/IQuizDTO";
 import Question from "models/Question";
-import { IQuestionDTO } from "dtos/IQuestionDTO";
+import Quiz from "models/Quiz";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

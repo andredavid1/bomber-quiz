@@ -1,6 +1,10 @@
-import useQuiz from "hooks/useQuiz";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { FiCheck, FiX } from "react-icons/fi";
+
+import { IQuizDTO } from "dtos/IQuizDTO";
+import useQuiz from "hooks/useQuiz";
+
 import {
   AnswerQuizContainer,
   AnswerRow,
@@ -11,9 +15,6 @@ import {
   QuizActions,
   Statement,
 } from "./styles";
-import { IQuizDTO } from "dtos/IQuizDTO";
-import Questions from "pages/questoes";
-import { FiCheck, FiX } from "react-icons/fi";
 
 const QuizContent = () => {
   const router = useRouter();

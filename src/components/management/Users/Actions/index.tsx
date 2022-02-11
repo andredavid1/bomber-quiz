@@ -1,6 +1,8 @@
-import useUser from "hooks/useUser";
 import { ChangeEvent, useState } from "react";
 import { FiXCircle } from "react-icons/fi";
+
+import useUser from "hooks/useUser";
+
 import { Container, SearchContainer } from "./styles";
 
 interface IUserActionsProps {

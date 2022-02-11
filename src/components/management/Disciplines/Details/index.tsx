@@ -1,6 +1,8 @@
-import useDiscipline from "hooks/useDiscipline";
-import { Container, Form, RowForm } from "./styles";
 import { useEffect, useState } from "react";
+
+import useDiscipline from "hooks/useDiscipline";
+
+import { Container, Form, RowForm } from "./styles";
 
 interface IDetailsDisciplineProps {
   show: boolean;

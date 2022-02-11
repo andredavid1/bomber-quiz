@@ -1,23 +1,16 @@
-import useAuth from "hooks/useAuth";
-import useConfig from "hooks/useConfig";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiMenu, FiMoon, FiSun } from "react-icons/fi";
 
-import {
-  Brand,
-  Container,
-  ListMenu,
-  Menu,
-  ToggleShowMenu,
-  UserProfilerContainer,
-} from "./styles";
+import useAuth from "hooks/useAuth";
+import useConfig from "hooks/useConfig";
+
+import { Brand, Container, ListMenu, Menu, ToggleShowMenu } from "./styles";
 
 const Header = () => {
   const { userLogged, verify, logout } = useAuth();
   const { theme, toggleTheme } = useConfig();
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [showProfile, setShowProfile] = useState<boolean>(false);
 
   useEffect(() => {
     verify();

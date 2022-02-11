@@ -1,9 +1,10 @@
 import { compare, hash } from "bcrypt";
-import { ICreateUserDTO, IUserDTO } from "dtos/IUserDTO";
-import AppError from "erros/AppError";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { IUserDTO } from "dtos/IUserDTO";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
-import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

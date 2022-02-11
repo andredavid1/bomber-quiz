@@ -1,14 +1,14 @@
+import { NextApiRequest, NextApiResponse } from "next";
+
 import { IAnswerDTO } from "dtos/IAnswerDTO";
 import { IQuestionDTO } from "dtos/IQuestionDTO";
-import { IQuizDTO, IQuizQuestion } from "dtos/IQuizDTO";
+import { IQuizQuestion } from "dtos/IQuizDTO";
 import { IUserDTO } from "dtos/IUserDTO";
-import AppError from "erros/AppError";
+import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
-import Answer from "models/Answer";
-import Question, { QuestionSchema } from "models/Question";
+import Question from "models/Question";
 import Quiz from "models/Quiz";
 import User from "models/User";
-import { NextApiRequest, NextApiResponse } from "next";
 
 function orderAnswers(array: IAnswerDTO[]) {
   for (let i = array.length - 1; i > 0; i--) {

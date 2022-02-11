@@ -1,22 +1,16 @@
 import axios from "axios";
+import router from "next/router";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { IQuizDTO } from "dtos/IQuizDTO";
 import useConfig from "hooks/useConfig";
 import useAuth from "hooks/useAuth";
-import { IQuizDTO } from "dtos/IQuizDTO";
-import router from "next/router";
 
 interface IQuizContextProps {
   quiz: IQuizDTO | null;
   createQuiz: () => Promise<void>;
   handleSelectQuiz: (quizId: string) => Promise<void>;
-  toRespond: (
-    quiz: IQuizDTO,
-    questionOrder: number,
-    answerId: string,
-    option: string
-  ) => Promise<void>;
   finishQuiz: (quiz: IQuizDTO) => Promise<void>;
 }
 
@@ -53,34 +47,6 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
 
     await axios
       .get(`/api/quiz/${quizId}`)
-      .then((response) => {
-        setQuiz(response.data.quiz);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.errorMessage);
-      })
-      .finally(async () => {
-        toggleLoading(false);
-      });
-  };
-
-  const toRespond = async (
-    quiz: IQuizDTO,
-    questionOrder: number,
-    answerId: string,
-    option: string
-  ) => {
-    toggleLoading(true);
-
-    const data = {
-      quizId: quiz._id,
-      questionOrder,
-      answerId,
-      option,
-    };
-
-    await axios
-      .patch(`/api/quiz/${userLogged?.id}`, data)
       .then((response) => {
         setQuiz(response.data.quiz);
       })
@@ -133,7 +99,6 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
         quiz,
         createQuiz,
         handleSelectQuiz,
-        toRespond,
         finishQuiz,
       }}
     >
