@@ -1,10 +1,17 @@
-import mongoose, { model, models } from "mongoose";
+import mongoose, { model, models, Schema } from "mongoose";
 
 export const QuizSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
     questions: [
-      { order: Number, id: String, correct: Boolean, answered: String },
+      { type: Schema.Types.ObjectId, ref: "Question", required: true },
+    ],
+    complementQuestionsQuiz: [
+      {
+        levelQuestion: String,
+        questionRight: Boolean,
+        selectedAnswerOption: String,
+      },
     ],
     average: { type: Number, default: 0 },
     finished: { type: Boolean, default: false },

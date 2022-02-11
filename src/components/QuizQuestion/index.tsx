@@ -1,7 +1,5 @@
-import { IAnswerDTO } from "dtos/IAnswerDTO";
 import useQuestion from "hooks/useQuestion";
 import useQuiz from "hooks/useQuiz";
-import Answer from "models/Answer";
 import router from "next/router";
 import { useEffect, useState } from "react";
 import {
@@ -22,8 +20,9 @@ const QuizQuestion = () => {
 
   useEffect(() => {
     if (quizSelected) {
-      handleSelectQuestionById(quizSelected.questions[questionOrder].id);
-      console.log(questionSelected);
+      handleSelectQuestionById(
+        quizSelected.questions[questionOrder].toString()
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionOrder, quizSelected]);
@@ -52,7 +51,8 @@ const QuizQuestion = () => {
     if (quizSelected) {
       toggleOrder(
         questionOrder - 1,
-        quizSelected.questions[questionOrder - 1].answered
+        quizSelected.complementQuestionsQuiz[questionOrder - 1]
+          .selectedAnswerOption
       );
     }
   };
@@ -61,7 +61,8 @@ const QuizQuestion = () => {
     if (quizSelected) {
       toggleOrder(
         questionOrder + 1,
-        quizSelected.questions[questionOrder + 1].answered
+        quizSelected.complementQuestionsQuiz[questionOrder + 1]
+          .selectedAnswerOption
       );
     }
   };
@@ -179,30 +180,46 @@ const QuizQuestion = () => {
           <div className="headerOption">D</div>
         </div>
         {quizSelected &&
-          quizSelected.questions.map((question) => (
+          quizSelected.questions.map((question, index) => (
             <div
               className="row"
-              key={question.id}
-              onClick={() => toggleOrder(question.order - 1, question.answered)}
+              key={question._id}
+              onClick={() =>
+                toggleOrder(
+                  index,
+                  quizSelected.complementQuestionsQuiz[index]
+                    .selectedAnswerOption
+                )
+              }
             >
               <div
-                className={`number ${
-                  questionOrder + 1 === question.order && "selected"
-                }`}
+                className={`number ${questionOrder === index && "selected"}`}
               >
-                {question.order}
+                {index + 1}
               </div>
               <div
-                className={`option ${question.answered === "A" && "selected"}`}
+                className={`option ${
+                  quizSelected.complementQuestionsQuiz[index]
+                    .selectedAnswerOption === "A" && "selected"
+                }`}
               ></div>
               <div
-                className={`option ${question.answered === "B" && "selected"}`}
+                className={`option ${
+                  quizSelected.complementQuestionsQuiz[index]
+                    .selectedAnswerOption === "B" && "selected"
+                }`}
               ></div>
               <div
-                className={`option ${question.answered === "C" && "selected"}`}
+                className={`option ${
+                  quizSelected.complementQuestionsQuiz[index]
+                    .selectedAnswerOption === "C" && "selected"
+                }`}
               ></div>
               <div
-                className={`option ${question.answered === "D" && "selected"}`}
+                className={`option ${
+                  quizSelected.complementQuestionsQuiz[index]
+                    .selectedAnswerOption === "D" && "selected"
+                }`}
               ></div>
             </div>
           ))}

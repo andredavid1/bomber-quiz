@@ -27,17 +27,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         let quizAnswered = 0;
         let averageSum = 0;
+        let qtdQuestionVeryEasy = 0;
+        let qtdQuestionVeryEasyRight = 0;
+        let qtdQuestionEasy = 0;
+        let qtdQuestionEasyRight = 0;
+        let qtdQuestionMedium = 0;
+        let qtdQuestionMediumRight = 0;
+        let qtdQuestionHard = 0;
+        let qtdQuestionHardRight = 0;
+        let qtdQuestionVeryHard = 0;
+        let qtdQuestionVeryHardRight = 0;
 
         if (performance) {
-          performance.map((userPerformance) => {
+          performance.map((quiz, index) => {
             quizAnswered = quizAnswered + 1;
-            averageSum = averageSum + userPerformance.average;
+            averageSum = averageSum + quiz.average;
           });
         }
 
         res.status(201).json({
           success: true,
-          performance: { quizAnswered, average: averageSum / quizAnswered },
+          performance: {
+            quizAnswered,
+            average: quizAnswered > 0 ? averageSum / quizAnswered : 0,
+          },
         });
       } catch (err) {
         if (err instanceof AppError) {

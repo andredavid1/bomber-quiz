@@ -16,6 +16,7 @@ export const Container = styled.div`
 
     &.left {
       display: none;
+      margin: 20px;
     }
 
     &.right {

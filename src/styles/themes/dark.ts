@@ -12,6 +12,9 @@ export default {
     successBg: "#008055",
     dangerBg: "#8F0000",
 
+    questionBg: "#342222",
+    textBg: "#ffffff",
+
     background: "#520000",
     text: "#ffffff",
   },

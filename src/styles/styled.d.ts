@@ -14,6 +14,9 @@ declare module "styled-components" {
       successBg: string;
       dangerBg: string;
 
+      questionBg: string;
+      textBg: string;
+
       background: string;
       text: string;
     };

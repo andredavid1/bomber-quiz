@@ -122,8 +122,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       .finally(async () => {
         toggleLoading(false);
       });
-
-    toggleLoading(false);
   };
 
   const updateUser = async (id: string, data: IUpdateData): Promise<void> => {
@@ -233,7 +231,10 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const getPerformance = async (userId: string): Promise<IUserPerformance> => {
     toggleLoading(true);
 
-    let performance: IUserPerformance = { quizAnswered: 0, average: 0 };
+    let performance: IUserPerformance = {
+      quizAnswered: 0,
+      average: 0,
+    };
 
     await axios
       .get(`/api/users/${userId}/performance`)

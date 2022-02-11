@@ -41,66 +41,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       break;
-    case "POST":
-      try {
-        await connectDB();
-
-        const user: IUserDTO = await User.findById(id).exec();
-
-        if (!user) {
-          throw new AppError("Usuário não encontrado.");
-        }
-
-        if (!user.registered) {
-          const qtdQuizAnswered = await Quiz.find({
-            userId: id,
-          }).exec();
-
-          if (qtdQuizAnswered.length >= 2) {
-            throw new AppError(
-              "Você já utilizou seus dois testes de cortesia. Registre-se e teste os seus conhecimentos."
-            );
-          }
-        }
-
-        const questions: IQuestionDTO[] = await Question.aggregate([
-          { $sample: { size: 5 } },
-        ]);
-
-        const questionsQuiz: IQuizQuestion[] = questions.map(
-          (question, index) => ({
-            order: index + 1,
-            id: question._id,
-            correct: false,
-            answered: "",
-          })
-        );
-
-        const data: ICreateQuizDTO = {
-          userId: id.toString(),
-          questions: questionsQuiz,
-          average: 0,
-          finished: false,
-        };
-
-        const quiz = new Quiz(data);
-
-        await quiz.save();
-
-        res.status(201).json({ success: true, quiz });
-      } catch (err) {
-        if (err instanceof AppError) {
-          res
-            .status(err.statusCode)
-            .json({ success: false, errorMessage: err.message });
-        } else {
-          res.status(500).json({
-            success: false,
-            errorMessage: "Erro na conexão com o servidor.",
-          });
-        }
-      }
-      break;
 
     case "PATCH":
       try {
@@ -115,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const question: IQuestionDTO = await Question.findById(
-          quizToUpdate.questions[questionOrder].id
+          quizToUpdate.questions[questionOrder]._id
         )
           .populate("answers")
           .exec();
@@ -124,12 +64,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           (answer) => answer._id == answerId
         );
 
-        quizToUpdate.questions[questionOrder].correct =
+        quizToUpdate.complementQuestionsQuiz[questionOrder].questionRight =
           checkAnswer && checkAnswer.correct && option !== "" ? true : false;
-        quizToUpdate.questions[questionOrder].answered = option;
+
+        quizToUpdate.complementQuestionsQuiz[
+          questionOrder
+        ].selectedAnswerOption = option;
 
         const questionToUpdate: IQuestionDTO = await Question.findById(
-          quizToUpdate.questions[questionOrder].id
+          quizToUpdate.questions[questionOrder]._id
         ).exec();
 
         if (!questionToUpdate) {
@@ -144,14 +87,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           {
             new: true,
           }
-        ).exec();
+        )
+          .populate({ path: "questions", model: "Question" })
+          .populate({ path: "questions.answers", model: "Answer" })
+          .exec();
 
         questionToUpdate.qtdAnswers = questionToUpdate.qtdAnswers + 1;
-        questionToUpdate.qtdCorrectAnswers = quizToUpdate.questions[
-          questionOrder
-        ].correct
+
+        questionToUpdate.qtdCorrectAnswers = quizToUpdate
+          .complementQuestionsQuiz[questionOrder].questionRight
           ? questionToUpdate.qtdCorrectAnswers + 1
           : questionToUpdate.qtdCorrectAnswers;
+
         if (
           (questionToUpdate.qtdCorrectAnswers / questionToUpdate.qtdAnswers) *
             100 <=

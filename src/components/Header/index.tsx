@@ -8,6 +8,7 @@ import { FiMenu, FiMoon, FiSun } from "react-icons/fi";
 import {
   Brand,
   Container,
+  ListMenu,
   Menu,
   ToggleShowMenu,
   UserProfilerContainer,
@@ -33,48 +34,45 @@ const Header = () => {
       </Brand>
 
       <Menu show={showMenu}>
-        <li>
-          <Link href="/usuarios" passHref>
-            <a>Usuários</a>
-          </Link>
-        </li>
-
-        <li>
-          <Link href="/materias" passHref>
-            <a>Matérias</a>
-          </Link>
-        </li>
-
-        <li>
-          <Link href="/questoes" passHref>
-            <a>Questões</a>
-          </Link>
-        </li>
-
-        <li className="profile">
-          <button type="button" onClick={() => setShowProfile(!showProfile)}>
-            Perfil
-          </button>
-          <UserProfilerContainer show={showProfile}>
-            <li>{userLogged?.name}</li>
-            <li>
-              <Link href={`/usuarios/${userLogged?.id}/alterar-senha`} passHref>
-                <a>Alterar Senha</a>
-              </Link>
-            </li>
-            <li>
-              <button onClick={logout}>Sair</button>
-            </li>
-          </UserProfilerContainer>
-        </li>
-        <li>
-          <button type="button" onClick={toggleTheme}>
-            {theme.title === "light" ? <FiMoon /> : <FiSun />}
-          </button>
-        </li>
+        <ListMenu>
+          <li>
+            <Link href="/usuarios" passHref>
+              <a>Usuários</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/materias" passHref>
+              <a>Matérias</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/questoes" passHref>
+              <a>Questões</a>
+            </Link>
+          </li>
+          <li>
+            <a>Perfil</a>
+            <ul>
+              <li>
+                <Link
+                  href={`/usuarios/${userLogged?.id}/alterar-senha`}
+                  passHref
+                >
+                  <a>Alterar Senha</a>
+                </Link>
+              </li>
+              <li>
+                <button onClick={logout}>Sair</button>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <button type="button" onClick={toggleTheme}>
+              {theme.title === "light" ? <FiMoon /> : <FiSun />}
+            </button>
+          </li>
+        </ListMenu>
       </Menu>
-
-      <UserProfilerContainer show={showMenu}></UserProfilerContainer>
 
       <ToggleShowMenu type="button" onClick={() => setShowMenu(!showMenu)}>
         <FiMenu />

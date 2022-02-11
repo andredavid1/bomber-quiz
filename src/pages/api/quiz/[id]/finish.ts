@@ -24,31 +24,41 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           throw new AppError("Questionário não encontrado.", 404);
         }
 
-        const qtdQuestions = quizToUpdate.questions.length;
-        let qtdAnswersCorrects = 0;
+        const quiz = await Quiz.findByIdAndUpdate(id, req.body, {
+          new: true,
+        })
+          .populate({ path: "questions", model: "Question" })
+          .populate({ path: "questions.answers", model: "Answer" })
+          .exec();
 
-        quizToUpdate.questions.map((question) => {
-          qtdAnswersCorrects = question.correct
-            ? qtdAnswersCorrects + 1
-            : qtdAnswersCorrects;
+        /* const questions: IQuestionDTO[] = await Question.find()
+          .populate("discipline")
+          .populate({
+            path: "answers",
+            model: "Answer",
+            select: "_id value correct",
+          })
+          .exec();
+
+        let questionsComplete: IQuestionDTO[] = [];
+
+        quizToUpdate.questions.map((questionEdited) => {
+          questions.map((question) => {
+            if (questionEdited._id.toString() === question._id.toString()) {
+              questionsComplete.push(question);
+            }
+          });
+        }); */
+
+        if (!quiz) {
+          throw new AppError("Não foi possível finalizar o quiz.");
+        }
+        console.log(quiz);
+
+        res.status(201).json({
+          success: true,
+          quiz,
         });
-
-        const average = (qtdAnswersCorrects / qtdQuestions) * 100;
-
-        quizToUpdate.average = average;
-        quizToUpdate.finished = true;
-
-        const quiz = await Quiz.findByIdAndUpdate(
-          id,
-          {
-            ...quizToUpdate,
-          },
-          {
-            new: true,
-          }
-        ).exec();
-
-        res.status(201).json({ success: true, quiz });
       } catch (err) {
         if (err instanceof AppError) {
           res

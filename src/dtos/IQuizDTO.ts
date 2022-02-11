@@ -1,13 +1,15 @@
+import { IQuestionDTO } from "./IQuestionDTO";
+
 export interface IQuizQuestion {
-  order: number;
-  id: string;
-  correct: boolean;
-  answered: string;
+  levelQuestion: string;
+  questionRight: boolean;
+  selectedAnswerOption: string;
 }
 
 export interface ICreateQuizDTO {
   userId: string;
-  questions: IQuizQuestion[];
+  questions: IQuestionDTO[];
+  complementQuestionsQuiz: IQuizQuestion[];
   average: number;
   finished: boolean;
 }

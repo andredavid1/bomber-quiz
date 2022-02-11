@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema } from "mongoose";
+import mongoose, { model, models } from "mongoose";
 
 export const AnswerSchema = new mongoose.Schema({
   value: { type: String, required: true },

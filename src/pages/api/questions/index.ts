@@ -97,6 +97,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           statement,
           difficult,
           answers: answersSaved,
+          qtdAnswers: 0,
+          qtdCorrectAnswers: 0,
         };
 
         const question = new Question(data);

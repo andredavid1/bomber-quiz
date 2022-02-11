@@ -7,13 +7,8 @@ import useAuth from "hooks/useAuth";
 import { IQuizDTO } from "dtos/IQuizDTO";
 import router from "next/router";
 
-interface IOrderProps {
-  field?: string;
-  order?: string;
-}
-
 interface IQuizContextProps {
-  quizSelected: IQuizDTO | null;
+  quiz: IQuizDTO | null;
   createQuiz: () => Promise<void>;
   handleSelectQuiz: (quizId: string) => Promise<void>;
   toRespond: (
@@ -22,7 +17,7 @@ interface IQuizContextProps {
     answerId: string,
     option: string
   ) => Promise<void>;
-  finishQuiz: () => Promise<void>;
+  finishQuiz: (quiz: IQuizDTO) => Promise<void>;
 }
 
 const QuizContext = createContext({} as IQuizContextProps);
@@ -34,21 +29,21 @@ interface IQuizProviderProps {
 export const QuizProvider = ({ children }: IQuizProviderProps) => {
   const { userLogged } = useAuth();
   const { toggleLoading } = useConfig();
-  const [quizSelected, setQuizSelected] = useState<IQuizDTO | null>(null);
+  const [quiz, setQuiz] = useState<IQuizDTO | null>(null);
 
-  const createQuiz = async () => {
+  const createQuiz = async (): Promise<void> => {
     toggleLoading(true);
 
     await axios
-      .post(`/api/quiz/${userLogged?.id}`)
+      .post(`/api/quiz/${userLogged?.id}/create`)
       .then((response) => {
-        setQuizSelected(response.data.quiz);
+        setQuiz(response.data.quiz);
         router.push(`/quiz/${response.data.quiz._id}`);
       })
       .catch((err) => {
         toast.error(err.response.data.errorMessage);
       })
-      .finally(async () => {
+      .finally(() => {
         toggleLoading(false);
       });
   };
@@ -59,7 +54,7 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
     await axios
       .get(`/api/quiz/${quizId}`)
       .then((response) => {
-        setQuizSelected(response.data.quiz);
+        setQuiz(response.data.quiz);
       })
       .catch((err) => {
         toast.error(err.response.data.errorMessage);
@@ -87,7 +82,7 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
     await axios
       .patch(`/api/quiz/${userLogged?.id}`, data)
       .then((response) => {
-        setQuizSelected(response.data.quiz);
+        setQuiz(response.data.quiz);
       })
       .catch((err) => {
         toast.error(err.response.data.errorMessage);
@@ -97,14 +92,33 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
       });
   };
 
-  const finishQuiz = async () => {
+  const finishQuiz = async (quizFinished: IQuizDTO) => {
     toggleLoading(true);
+    console.log("finishing quiz context");
 
     await axios
-      .patch(`/api/quiz/${quizSelected?._id}/finish`)
+      .patch(`/api/quiz/${quizFinished._id}/finish`, quizFinished)
       .then((response) => {
-        console.log(response.data.quiz);
-        setQuizSelected(response.data.quiz);
+        const average = response.data.quiz.average;
+        console.log(typeof average);
+        if (average < 5) {
+          toast.error(
+            `O seu desempenho foi nota: ${average}. Estude um pouco mais e tente novamente.`
+          );
+        }
+
+        if (average >= 5 && average < 8) {
+          toast.success(
+            `O seu desempenho foi nota: ${average}. Você está no caminho certo. Continue estudando.`
+          );
+        }
+
+        if (average >= 8) {
+          toast.success(
+            `Parabéns! O seu desempenho foi nota: ${average}. Continue assim.`
+          );
+        }
+        setQuiz(response.data.quiz);
       })
       .catch((err) => {
         toast.error(err.response.data.errorMessage);
@@ -117,7 +131,7 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
   return (
     <QuizContext.Provider
       value={{
-        quizSelected,
+        quiz,
         createQuiz,
         handleSelectQuiz,
         toRespond,
