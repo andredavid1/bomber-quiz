@@ -98,7 +98,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         } else {
           res.status(500).json({
             success: false,
-            errorMessage: `${err}`,
+            errorMessage: "Erro na conexão com o servidor.",
           });
         }
       }
