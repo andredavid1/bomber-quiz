@@ -20,6 +20,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(200).json({ success: true, answers });
       } catch (err) {
+        console.log("err answers index get", err);
+
         if (err instanceof AppError) {
           res
             .status(err.statusCode)
@@ -50,6 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(201).json({ success: true, answer });
       } catch (err) {
+        console.log("err answers index post", err);
         if (err instanceof AppError) {
           res
             .status(err.statusCode)

@@ -22,6 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(201).json({ success: true, answer });
       } catch (err) {
+        console.log("err answers id get", err);
+
         if (err instanceof AppError) {
           res
             .status(err.statusCode)
@@ -59,6 +61,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(201).json({ success: true, discipline });
       } catch (err) {
+        console.log("err answers id put", err);
+
         if (err instanceof AppError) {
           res
             .status(err.statusCode)
@@ -85,6 +89,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(200).json({ success: true });
       } catch (err: any) {
+        console.log("err answers id delete", err);
+
         if (err instanceof AppError) {
           res
             .status(err.statusCode)

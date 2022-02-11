@@ -63,6 +63,7 @@ export const AnswerProvider = ({ children }: IAnswerProviderProps) => {
       })
       .catch((err) => {
         toast.error(err.response.data.errorMessage);
+        toast.error("err answer add");
       })
       .finally(async () => {
         toggleLoading(false);
@@ -88,6 +89,8 @@ export const AnswerProvider = ({ children }: IAnswerProviderProps) => {
         setAnswers(response.data.answers);
       })
       .catch((err) => {
+        toast.error("err answer list");
+
         setAnswers(null);
         toast.error(err.response.data.errorMessage);
       })
@@ -108,6 +111,8 @@ export const AnswerProvider = ({ children }: IAnswerProviderProps) => {
         toast.success("Resposta atualizada com sucesso.");
       })
       .catch((err) => {
+        toast.error("err answer update");
+
         toast.error(err.response.data.errorMessage);
       })
       .finally(async () => {
@@ -127,6 +132,8 @@ export const AnswerProvider = ({ children }: IAnswerProviderProps) => {
         toast.success("Resposta excluída com sucesso.");
       })
       .catch((err) => {
+        toast.error("err answer delete");
+
         toggleOperation("list");
         toast.error(err.response.data.errorMessage);
       })
