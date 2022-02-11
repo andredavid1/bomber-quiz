@@ -35,6 +35,7 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
         router.push(`/quiz/${response.data.quiz._id}`);
       })
       .catch((err) => {
+        toast.error(err);
         toast.error(err.response.data.errorMessage);
       })
       .finally(() => {
