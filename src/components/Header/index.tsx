@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import useAuth from "hooks/useAuth";
 import useConfig from "hooks/useConfig";
 import Link from "next/link";

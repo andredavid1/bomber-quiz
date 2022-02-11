@@ -95,8 +95,6 @@ export default async function handler(
           payload: { id: user._id, name: user.name, level: user.level },
         });
       } catch (err: any) {
-        console.log("err auth login post", err);
-
         if (err instanceof AppError) {
           return res
             .status(err.statusCode)

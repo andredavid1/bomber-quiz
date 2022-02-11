@@ -91,7 +91,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(201).json({ success: true, quiz });
       } catch (err) {
-        console.log(err);
         if (err instanceof AppError) {
           res
             .status(err.statusCode)

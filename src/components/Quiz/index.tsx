@@ -25,7 +25,6 @@ const QuizContent = () => {
 
   useEffect(() => {
     if (quiz) {
-      console.log(quiz);
       setQuizSelected(quiz);
     }
   }, [quiz]);

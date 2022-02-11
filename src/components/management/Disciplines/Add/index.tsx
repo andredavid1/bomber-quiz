@@ -1,7 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import validator from "validator";
 
 import { ICreateDisciplineDTO } from "dtos/IDisciplineDTO";
 import useDiscipline from "hooks/useDiscipline";

@@ -41,8 +41,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         Router.push("/");
       })
       .catch((err) => {
-        toast.error("err auth login");
-
         toast.error(err.response.data.error);
       })
       .finally(async () => {
@@ -59,8 +57,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         Router.push("/login");
       })
       .catch((err) => {
-        toast.error("err auth logout");
-
         toast.error(err.response.data.error);
       })
       .finally(async () => {
@@ -83,8 +79,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         setUserLogged(response.data.payload);
       })
       .catch((err) => {
-        toast.error("err auth verify");
-
         toast.error(err.response.data.error);
       })
       .finally(async () => {

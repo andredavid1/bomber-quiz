@@ -61,8 +61,6 @@ export default async function handler(
 
         return res.status(200).json({ success: true, payload: userLogged });
       } catch (err: any) {
-        console.log("err auth verify post", err);
-
         if (err instanceof AppError) {
           return res
             .status(err.statusCode)

@@ -38,18 +38,6 @@ const HomeComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    performance && console.log("tem", performance.average);
-    if (typeof performance.average === "undefined") {
-      console.log("aqui");
-      toggleLoading(true);
-    } else {
-      console.log("tem valor");
-      toggleLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [performance.average]);
-
   const handleStart = async () => {
     await createQuiz();
   };

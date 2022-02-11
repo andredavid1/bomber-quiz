@@ -31,29 +31,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           .populate({ path: "questions.answers", model: "Answer" })
           .exec();
 
-        /* const questions: IQuestionDTO[] = await Question.find()
-          .populate("discipline")
-          .populate({
-            path: "answers",
-            model: "Answer",
-            select: "_id value correct",
-          })
-          .exec();
-
-        let questionsComplete: IQuestionDTO[] = [];
-
-        quizToUpdate.questions.map((questionEdited) => {
-          questions.map((question) => {
-            if (questionEdited._id.toString() === question._id.toString()) {
-              questionsComplete.push(question);
-            }
-          });
-        }); */
-
         if (!quiz) {
           throw new AppError("Não foi possível finalizar o quiz.");
         }
-        console.log(quiz);
 
         res.status(201).json({
           success: true,

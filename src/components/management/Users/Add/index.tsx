@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import validator from "validator";

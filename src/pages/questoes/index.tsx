@@ -3,7 +3,7 @@ import { NextPage, NextPageContext } from "next";
 
 import AddQuestion from "components/management/Questions/Add";
 import DetailsQuestion from "components/management/Questions/Details";
-/* import DeleteQuestion from "components/Questions/Delete"; */
+/* import DeleteQuestion from "components/management/Questions/Delete"; */
 import EditQuestion from "components/management/Questions/Edit";
 import ListQuestion from "components/management/Questions/List";
 import useQuestion from "hooks/useQuestion";

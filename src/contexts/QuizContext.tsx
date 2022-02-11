@@ -94,13 +94,12 @@ export const QuizProvider = ({ children }: IQuizProviderProps) => {
 
   const finishQuiz = async (quizFinished: IQuizDTO) => {
     toggleLoading(true);
-    console.log("finishing quiz context");
 
     await axios
       .patch(`/api/quiz/${quizFinished._id}/finish`, quizFinished)
       .then((response) => {
         const average = response.data.quiz.average;
-        console.log(typeof average);
+
         if (average < 5) {
           toast.error(
             `O seu desempenho foi nota: ${average}. Estude um pouco mais e tente novamente.`
