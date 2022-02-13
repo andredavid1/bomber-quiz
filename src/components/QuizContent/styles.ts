@@ -5,6 +5,7 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: small;
 `;
 
@@ -151,7 +152,13 @@ export const QuizActions = styled.div`
 `;
 
 export const AnswerQuizContainer = styled.div`
+  display: none;
   padding: 0 10px;
+
+  @media screen and (min-width: 600px) {
+    display: flex;
+    flex-direction: column;
+  }
 
   div {
     display: flex;
