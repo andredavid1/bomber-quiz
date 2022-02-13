@@ -156,8 +156,12 @@ const QuizContent = () => {
               >
                 A
               </span>
-              <span className={`value ${quizSelected.finished && "finished"}`}>
+              <span className={`value`}>
                 {quizSelected.questions[questionOrder].answers[0].value}
+              </span>
+              <span
+                className={`correction ${quizSelected.finished && "finished"}`}
+              >
                 {quizSelected.questions[questionOrder].answers[0].correct ? (
                   <FiCheck className="success" />
                 ) : (
@@ -203,8 +207,12 @@ const QuizContent = () => {
               >
                 B
               </span>
-              <span className={`value ${quizSelected.finished && "finished"}`}>
+              <span className={`value`}>
                 {quizSelected.questions[questionOrder].answers[1].value}
+              </span>
+              <span
+                className={`correction ${quizSelected.finished && "finished"}`}
+              >
                 {quizSelected.questions[questionOrder].answers[1].correct ? (
                   <FiCheck className="success" />
                 ) : (
@@ -250,8 +258,12 @@ const QuizContent = () => {
               >
                 C
               </span>
-              <span className={`value ${quizSelected.finished && "finished"}`}>
+              <span className={`value`}>
                 {quizSelected.questions[questionOrder].answers[2].value}
+              </span>
+              <span
+                className={`correction ${quizSelected.finished && "finished"}`}
+              >
                 {quizSelected.questions[questionOrder].answers[2].correct ? (
                   <FiCheck className="success" />
                 ) : (
@@ -297,8 +309,12 @@ const QuizContent = () => {
               >
                 D
               </span>
-              <span className={`value ${quizSelected.finished && "finished"}`}>
+              <span className={`value`}>
                 {quizSelected.questions[questionOrder].answers[3].value}
+              </span>
+              <span
+                className={`correction ${quizSelected.finished && "finished"}`}
+              >
                 {quizSelected.questions[questionOrder].answers[3].correct ? (
                   <FiCheck className="success" />
                 ) : (

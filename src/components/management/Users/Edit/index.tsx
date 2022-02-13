@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
+import useAuth from "hooks/useAuth";
 import useUser from "hooks/useUser";
 
 import { Container, Form, RowForm } from "./styles";
@@ -9,6 +10,7 @@ interface IEditUserProps {
 }
 
 const EditUser = ({ show }: IEditUserProps) => {
+  const { userLogged } = useAuth();
   const { userSelected, handleSelectUser, updateUser, toggleOperation } =
     useUser();
 
@@ -58,7 +60,7 @@ const EditUser = ({ show }: IEditUserProps) => {
   return (
     <Container show={show}>
       <Form onSubmit={handleSubmit}>
-        <h3>Editar usuário</h3>
+        <h3>Editar {userLogged?.level === "admin" ? "usuário" : "perfil"}</h3>
         <RowForm>
           <label htmlFor="id">Código:</label>
           <input type="text" id="id" disabled value={userSelected?._id} />

@@ -74,7 +74,7 @@ const ListUser = ({ show }: IListUserProps) => {
 
   const handleSubscribe = (user: IUserDTO) => {
     handleSelectUser(user);
-    router.push(`/usuarios/${user._id}/subscribe`);
+    router.push(`/usuarios/${user._id}/assinatura`);
   };
 
   const handleEdit = (user: IUserDTO) => {

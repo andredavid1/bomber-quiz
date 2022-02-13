@@ -28,6 +28,11 @@ const Header = () => {
       <Menu show={showMenu}>
         <ListMenu>
           <li>
+            <Link href="/" passHref>
+              <a>Home</a>
+            </Link>
+          </li>
+          <li>
             <Link href="/usuarios" passHref>
               <a>Usuários</a>
             </Link>
@@ -45,6 +50,14 @@ const Header = () => {
           <li>
             <a>Perfil</a>
             <ul>
+              <li>
+                <Link
+                  href={`/usuarios/${userLogged?.id}/editar-perfil`}
+                  passHref
+                >
+                  <a>Editar Perfil</a>
+                </Link>
+              </li>
               <li>
                 <Link
                   href={`/usuarios/${userLogged?.id}/alterar-senha`}

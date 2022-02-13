@@ -7,7 +7,8 @@ export const Container = styled.div`
   margin: 5px 0;
 
   span {
-    background-color: green;
+    background-color: ${(props) => props.theme.colors.successBg};
+    color: ${(props) => props.theme.colors.white};
     display: flex;
     align-items: center;
     justify-content: center;

@@ -5,6 +5,11 @@ import { IUserDTO } from "dtos/IUserDTO";
 import AppError from "errors/AppError";
 import { connectDB } from "lib/mongodb";
 import User from "models/User";
+import {
+  ICreateSubscriptionDTO,
+  ISubscriptionDTO,
+} from "dtos/ISubscriptionDTO";
+import Subscription from "models/Subscription";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
@@ -57,9 +62,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           { new: true }
         ).exec();
 
-        //TODO: Registrar assinatura em collection própria
+        const data: ICreateSubscriptionDTO = {
+          user,
+          plan,
+          condition,
+          discount,
+          amount,
+        };
 
-        res.status(201).json({ success: true, user });
+        const subscription = new Subscription(data);
+
+        await subscription.save();
+
+        res.status(201).json({ success: true, subscription });
       } catch (err) {
         if (err instanceof AppError) {
           res
